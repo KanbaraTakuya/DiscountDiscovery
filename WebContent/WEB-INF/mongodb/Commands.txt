@@ -1,2 +1,2 @@
 Start MongoDB with the specified datapath
-"C:\Program Files\MongoDB\Server\3.6\bin\mongod.exe" --dbpath d:\mongodb\data
+"C:\Program Files\MongoDB\Server\3.6\bin\mongod.exe" --dbpath c:\Users\MSI-PC\Documents\GitHub\DiscountDiscovery\WebContent\WEB-INF\mongodb\data
