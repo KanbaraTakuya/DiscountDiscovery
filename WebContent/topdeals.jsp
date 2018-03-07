@@ -42,12 +42,12 @@
             </li>
             <li class="nav-item">
               <div class="wrap">
-               <div class="search">
-                 <input type="text" class="searchTerm" placeholder="What are you looking for?">
-                 <button type="submit" class="searchButton" >
-                 <i class="fa fa-search"></i>
-                 </button>
-               </div>
+                <form class="search" action="/action_page.php" style="margin:ato;max-width:300px">
+                  <input type="text" class="searchTerm" placeholder="What are you looking for?" name="search">
+                  <button type="submit" class="searchButton">
+                  <i class="fa fa-search"></i>
+                  </button>
+                </form>
               </div>
             </li>
 
@@ -167,7 +167,7 @@
     <!-- /.container -->
 
     <!-- Footer -->
-    <footer class="py-5 bg-dark">
+    <footer class="py-5 bg-info">
       <div class="container">
         <p class="m-0 text-center text-white">Copyright &copy; Your Website 2018</p>
       </div>

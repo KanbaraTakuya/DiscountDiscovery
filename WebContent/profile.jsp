@@ -20,6 +20,12 @@
 h1 {
     text-align: center;
 }
+footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 60px;
+}
 </style>
 
   </head>
@@ -41,19 +47,19 @@ h1 {
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">About us</a>
+              <a class="nav-link" href="aboutus.jsp">About us</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="topdeals.jsp">Top Deals</a>
             </li>
             <li class="nav-item">
               <div class="wrap">
-               <div class="search">
-                 <input type="text" class="searchTerm" placeholder="What are you looking for?">
+                <form class="search" action="/action_page.php" style="margin:ato;max-width:300px">
+                  <input type="text" class="searchTerm" placeholder="What are you looking for?" name="search">
                  <button type="submit" class="searchButton">
                  <i class="fa fa-search"></i>
                  </button>
-               </div>
+               </form>
               </div>
             </li>
 
@@ -70,12 +76,11 @@ h1 {
 
       <!-- the profile page -->
 
-<!------ Include the above in your HEAD tag ---------->
+<!--- Include the above in your HEAD tag ---------->
 
 
 <div class="container">
-<br>
-<br>
+
 	<div class="row" id="main">
         <div class="col-md-4 well" id="leftPanel">
             <div class="row">

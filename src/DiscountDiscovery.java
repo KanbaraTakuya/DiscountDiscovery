@@ -49,48 +49,90 @@ public class DiscountDiscovery extends HttpServlet {
 		doGet(request, response);
 		
 		System.out.println("Request received");
-		System.out.println("request.getParameter(username): " + request.getParameter("username"));
+		System.out.println("request.getParameter(usernameNearbySearch): " + request.getParameter("usernameNearbySearch"));
 		System.out.println("request.getParameter(isUserRecommendation): " + request.getParameter("isUserRecommendation"));
+		System.out.println("request.getParameter(isNearbySearch): " + request.getParameter("isNearbySearch"));
 		
-		if (request.getParameter("username") != null
-		    && request.getParameter("username") != ""
+		if (request.getParameter("usernameUserRecommendation") != null
+        && request.getParameter("usernameUserRecommendation") != ""
 		    && request.getParameter("isUserRecommendation") != null
-		    && request.getParameter("isUserRecommendation").equals("true"))
-		{
-		  try {
-		    Long startTime = System.nanoTime();
-	      
-	      HttpSession session = request.getSession(true);
-	      
-	      session.setAttribute("loading", true);
-	      
-	      int numOfRecommendations = 0;
-	      double[] results = null;
-	      
-	      String username = request.getParameter("username");
-	      
-	      if (request.getParameter("numOfRecommendations") != null)
-	        numOfRecommendations = Integer.parseInt(request.getParameter("numOfRecommendations"));
-	      
-	      if (numOfRecommendations == 0)
-	        results = MongoDBSearch.getAllSearchedStoresSorted(username);
-	      else
-	        results = MongoDBSearch.getRecommendedStoresSorted(username, numOfRecommendations);
-	      
-	      Long endTime = System.nanoTime();
-	      
-	      System.out.println("Username: " + username);
-	      System.out.println(Arrays.toString(results));
-	      
-	      if (session != null) 
-	      {
-	        session.setAttribute("userRecommendations", results);
-	      } // if
-		  } // try
-		  catch (Exception exception) {
-		    
-		  } // catch
-		} // if
+        && request.getParameter("isUserRecommendation").equals("true"))
+    {
+      try {
+        Long startTime = System.nanoTime();
+        
+        HttpSession session = request.getSession(true);
+        
+        session.setAttribute("loading", true);
+        
+        int numOfRecommendations = 0;
+        double[] results = null;
+        
+        String username = request.getParameter("usernameUserRecommendation");
+        
+        if (request.getParameter("numOfRecommendations") != null)
+          numOfRecommendations = Integer.parseInt(request.getParameter("numOfRecommendations"));
+        
+        if (numOfRecommendations == 0)
+          results = MongoDBSearch.getAllSearchedStoresSorted(username);
+        else
+          results = MongoDBSearch.getRecommendedStoresSorted(username, numOfRecommendations);
+        
+        Long endTime = System.nanoTime();
+        
+        System.out.println("Username: " + username);
+        System.out.println(Arrays.toString(results));
+        
+        if (session != null) 
+        {
+          session.setAttribute("userRecommendations", results);
+          session.setAttribute("nearbyStores", null);
+        } // if
+      } // try
+      catch (Exception exception) {
+        
+      } // catch
+    } // if
+    else if (request.getParameter("usernameNearbySearch") != null
+        && request.getParameter("usernameNearbySearch") != ""
+        && request.getParameter("isNearbySearch") != null
+        && request.getParameter("isNearbySearch").equals("true"))
+    {
+      try {
+        Long startTime = System.nanoTime();
+        
+        HttpSession session = request.getSession(true);
+        
+        session.setAttribute("loading", true);
+        
+        double latitude = 0.0;
+        double longitude = 0.0;
+        double[] results = null;
+        
+        String username = request.getParameter("usernameNearbySearch");
+        
+        if (request.getParameter("latNearbySearch") != null)
+          latitude = Double.parseDouble(request.getParameter("latNearbySearch"));
+        if (request.getParameter("lngNearbySearch") != null)
+          longitude = Double.parseDouble(request.getParameter("lngNearbySearch"));
+        
+        results = MongoDBSearch.nearbySearch(username, latitude, longitude);
+        
+        Long endTime = System.nanoTime();
+        
+        System.out.println("Username: " + username);
+        System.out.println(Arrays.toString(results));
+        
+        if (session != null) 
+        {
+          session.setAttribute("userRecommendations", null);
+          session.setAttribute("nearbyStores", results);
+        } // if
+      } // try
+      catch (Exception exception) {
+        
+      } // catch
+    } // else if
 		response.setHeader("Refresh", "0; URL=http://localhost:8080/DiscountDiscovery/index.jsp");
 	} // doPost
 
