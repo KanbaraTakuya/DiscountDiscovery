@@ -19,20 +19,17 @@
     <link href="css/portfolio-item.css" rel="stylesheet">
 
 	<%
-      double[] userRecommendations = null;
-      if ((double[])session.getAttribute("userRecommendations") != null)
-        userRecommendations = (double[])session.getAttribute("userRecommendations");
+      double[] locationsUserRecommendation = null;
+      if ((double[])session.getAttribute("locationsUserRecommendation") != null)
+        locationsUserRecommendation = (double[])session.getAttribute("locationsUserRecommendation");
         
-      double[] nearbyStores = null;
-      if ((double[])session.getAttribute("nearbyStores") != null)
-        nearbyStores = (double[])session.getAttribute("nearbyStores");
+      double[] locationsNearby = null;
+      if ((double[])session.getAttribute("locationsNearby") != null)
+        locationsNearby = (double[])session.getAttribute("locationsNearby");
     %>
   </head>
 
-  <body onload="putNearbySearchMarkers()">
-    <input type="hidden" id="isUserRecommendation" name="isUserRecommendation" value="false"/>
-    <input type="hidden" id="numOfRecommendations" name="numOfRecommendations" value="0"/>
-
+  <body onload="putNearbySearchMarkers();putUserRecommendationsMarkers()">
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-info fixed-top">
       <div class="container">
@@ -96,6 +93,7 @@
             	var lng = 0.0;
             	var markers = [];
             	var nearbyMarkers = [];
+            	var recommendationMarkers = [];
             	
                 function initMap() {
                   map = new google.maps.Map(document.getElementById('map'), {
@@ -181,12 +179,21 @@
                 <input type="hidden" id="isNearbySearch" name="isNearbySearch" value="false"/>
     			<input type="hidden" id="latNearbySearch" name="latNearbySearch" value="0.0"/>
     			<input type="hidden" id="lngNearbySearch" name="lngNearbySearch" value="0.0"/>
+    			Max num of results: <input type="text" id="maxNumOfResultsNearbySearch" name="maxNumOfResultsNearbySearch" value="5">
 	  			<input type="submit" value="nearbySearch" onclick="nearbySearch()"/>
 	  		  </form>
 	  		  
+	  		  <form action="DiscountDiscovery" method="post">
+                <input type="hidden" id="usernameUserRecommendation" name="usernameUserRecommendation" value=""/>
+                <input type="hidden" id="isUserRecommendation" name="isUserRecommendation" value="false"/>
+    			<input type="hidden" id="latUserRecommendation" name="latUserRecommendation" value="0.0"/>
+    			<input type="hidden" id="lngUserRecommendation" name="lngUserRecommendation" value="0.0"/>
+    			Max num of results: <input type="text" id="maxNumOfResultsUserRecommendation" name="maxNumOfResultsUserRecommendation" value="5">
+	  			<input type="submit" value="userRecommendation" onclick="userRecommendation()"/>
+	  		  </form>
+	  		 
 	  		  <p id="latDisplay">lat</p>
 	  		  <p id="lngDisplay">lng</p>
-	  		  <p id="nearbySearchResult">empty</p>
 
 
           <h2 class="my-3">Reviews Section</h2>
@@ -331,23 +338,26 @@
 	}
 	
 	function putNearbySearchMarkers() {
-		document.getElementById("nearbySearchResult").innerHTML = nearbyStoresArr;
 		addNearbySearchMarkers();
 	}
+	
+	function putUserRecommendationsMarkers() {
+		addUserRecommendationMarkers();
+	}
 				
-	var userRecommendationsArr = new Array();
-	<%if(userRecommendations != null) {%>
-		userRecommendationsArr = new Array(<%=userRecommendations.length%>);
-		<%for (int i=0; i < userRecommendations.length; i++) {%>
-			userRecommendationsArr[<%=i%>] = <%=userRecommendations[i]%>;
+	var locationsUserRecommendationArr = new Array();
+	<%if(locationsUserRecommendation != null) {%>
+		locationsUserRecommendationArr = new Array(<%=locationsUserRecommendation.length%>);
+		<%for (int i=0; i < locationsUserRecommendation.length; i++) {%>
+		locationsUserRecommendationArr[<%=i%>] = <%=locationsUserRecommendation[i]%>;
 		<%}%>
 	<%}%>
 	
-	var nearbyStoresArr = new Array();
-	<%if(nearbyStores != null) {%>
-		nearbyStoresArr = new Array(<%=nearbyStores.length%>);
-		<%for (int i=0; i < nearbyStores.length; i++) {%>
-			nearbyStoresArr[<%=i%>] = <%=nearbyStores[i]%>;
+	var locationsNearbyArr = new Array();
+	<%if(locationsNearby != null) {%>
+		locationsNearbyArr = new Array(<%=locationsNearby.length%>);
+		<%for (int i=0; i < locationsNearby.length; i++) {%>
+			locationsNearbyArr[<%=i%>] = <%=locationsNearby[i]%>;
 		<%}%>
 	<%}%>	
 	
@@ -364,18 +374,32 @@
     	markers.push(marker);
     }
 	
-	function addNearbyMarker(location) {
+	function addNearbySearchMarker(location) {
     	var marker = new google.maps.Marker({
-    	position: location,
-    	map: map
+    		position: location,
+    		map: map
     	});
     	nearbyMarkers.push(marker);
     }
+	
+	function addUserRecommendationMarker(location) {
+		var marker = new google.maps.Marker({
+	    	position: location,
+	    	map: map
+	    });
+		recommendationMarkers.push(marker);
+	}
 	
 	// Sets the map on all markers in the array.
     function setMapOnAll(map) {
     	for (var i = 0; i < markers.length; i++) {
       		markers[i].setMap(map);
+    	}
+    	for (var i = 0; i < nearbyMarkers.length; i++) {
+    		nearbyMarkers[i].setMap(map);
+    	}
+    	for (var i = 0; i < recommendationMarkers.length; i++) {
+    		recommendationMarkers[i].setMap(map);
     	}
     }
 	
@@ -389,6 +413,7 @@
     	clearMarkers();
     	markers = [];
 		nearbyMarkers = [];
+		recommendationMarkers = [];
     }
 	</script>
   </body>

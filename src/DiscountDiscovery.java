@@ -49,6 +49,7 @@ public class DiscountDiscovery extends HttpServlet {
 		doGet(request, response);
 		
 		System.out.println("Request received");
+		System.out.println("request.getParameter(usernameUserRecommendation): " + request.getParameter("usernameUserRecommendation"));
 		System.out.println("request.getParameter(usernameNearbySearch): " + request.getParameter("usernameNearbySearch"));
 		System.out.println("request.getParameter(isUserRecommendation): " + request.getParameter("isUserRecommendation"));
 		System.out.println("request.getParameter(isNearbySearch): " + request.getParameter("isNearbySearch"));
@@ -65,28 +66,45 @@ public class DiscountDiscovery extends HttpServlet {
         
         session.setAttribute("loading", true);
         
-        int numOfRecommendations = 0;
-        double[] results = null;
+        int maxNumOfRecommendations = 0;
+        Store[] resultStores = null;
         
         String username = request.getParameter("usernameUserRecommendation");
+        double latitude = 0.0;
+        double longitude = 0.0;
         
-        if (request.getParameter("numOfRecommendations") != null)
-          numOfRecommendations = Integer.parseInt(request.getParameter("numOfRecommendations"));
+        if (request.getParameter("maxNumOfResultsUserRecommendation") != null)
+          maxNumOfRecommendations = Integer.parseInt(request.getParameter("maxNumOfResultsUserRecommendation"));
+
+        if (request.getParameter("latUserRecommendation") != null)
+          latitude = Double.parseDouble(request.getParameter("latUserRecommendation"));
+        if (request.getParameter("lngUserRecommendation") != null)
+          longitude = Double.parseDouble(request.getParameter("lngUserRecommendation"));
         
-        if (numOfRecommendations == 0)
-          results = MongoDBSearch.getAllSearchedStoresSorted(username);
+        if (maxNumOfRecommendations == 0)
+          resultStores = MongoDBSearch.getRecommendedStoresSorted(username, 
+              latitude, longitude, 0);
         else
-          results = MongoDBSearch.getRecommendedStoresSorted(username, numOfRecommendations);
-        
+          resultStores = MongoDBSearch.getRecommendedStoresSorted(username, 
+              latitude, longitude, maxNumOfRecommendations);
+        System.out.println("resultStores: " + Arrays.toString(resultStores));
+        double[] locations = new double[resultStores.length * 2];
+        for (int index = 0; index < resultStores.length; index++)
+        {
+          locations[index * 2] = resultStores[index].getLatitude();
+          locations[index * 2 + 1] = resultStores[index].getLongitude();
+        }
+
         Long endTime = System.nanoTime();
         
         System.out.println("Username: " + username);
-        System.out.println(Arrays.toString(results));
+        System.out.println("locations: " + Arrays.toString(locations));
         
         if (session != null) 
         {
-          session.setAttribute("userRecommendations", results);
-          session.setAttribute("nearbyStores", null);
+          session.setAttribute("locationsUserRecommendation", locations);
+          session.setAttribute("locationsNearby", null);
+          session.setAttribute("loading", false);
         } // if
       } // try
       catch (Exception exception) {
@@ -105,28 +123,42 @@ public class DiscountDiscovery extends HttpServlet {
         
         session.setAttribute("loading", true);
         
+        String username = "";
         double latitude = 0.0;
         double longitude = 0.0;
-        double[] results = null;
+        int maxNumOfResults = 0;
+        Store[] resultStores = null;
         
-        String username = request.getParameter("usernameNearbySearch");
+        username = request.getParameter("usernameNearbySearch");
         
         if (request.getParameter("latNearbySearch") != null)
           latitude = Double.parseDouble(request.getParameter("latNearbySearch"));
         if (request.getParameter("lngNearbySearch") != null)
           longitude = Double.parseDouble(request.getParameter("lngNearbySearch"));
         
-        results = MongoDBSearch.nearbySearch(username, latitude, longitude);
+        if (request.getParameter("maxNumOfResultsNearbySearch") != null)
+          maxNumOfResults = Integer.parseInt(request.getParameter("maxNumOfResultsNearbySearch"));
+        System.out.println("maxNumOfResults: " + maxNumOfResults);
+        
+        resultStores = MongoDBSearch.nearbySearch(username, latitude, longitude, maxNumOfResults);
+        
+        double[] locations = new double[resultStores.length * 2];
+        for (int index = 0; index < resultStores.length; index++)
+        {
+          locations[index * 2] = resultStores[index].getLatitude();
+          locations[index * 2 + 1] = resultStores[index].getLongitude();
+        }
         
         Long endTime = System.nanoTime();
         
         System.out.println("Username: " + username);
-        System.out.println(Arrays.toString(results));
+        System.out.println("locations: " + Arrays.toString(locations));
         
         if (session != null) 
         {
-          session.setAttribute("userRecommendations", null);
-          session.setAttribute("nearbyStores", results);
+          session.setAttribute("locationsUserRecommendation", null);
+          session.setAttribute("locationsNearby", locations);
+          session.setAttribute("loading", false);
         } // if
       } // try
       catch (Exception exception) {

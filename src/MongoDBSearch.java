@@ -165,7 +165,8 @@ public class MongoDBSearch
     mongoClient.close();
   } // updateOnSearch
   
-  public static double[] getAllSearchedStoresSorted(String username)
+  public static Store[] getRecommendedStoresSorted(String username, double latitude, double longitude,
+      int maxNumOfResults)
   {
     // Create an instance of MongoClient with the default credentials.
     MongoClient mongoClient = new MongoClient( "localhost" , 27017 );
@@ -175,6 +176,7 @@ public class MongoDBSearch
     
     // Get the collection instances.
     MongoCollection<Document> collectionUsers = db.getCollection("users");
+    MongoCollection<Document> collectionStores = db.getCollection("stores");
     
     // Check if the username exists in the User collection.
     MongoCursor<Document> usersCursor = 
@@ -184,82 +186,62 @@ public class MongoDBSearch
     if (usersCursor.hasNext())
     {
       Document theUser = usersCursor.next();
-      String storesStr = theUser.getString("numOfSearchesStores");
-      String[] storeInfoStrs = storesStr.split(" ");
-      int numOfStores = storeInfoStrs.length / 2;
-      
-      double[] results = new double[numOfStores * 2];
-      for (int counter = 0; counter < numOfStores; counter++)
-      {
-        results[counter * 2 + 0] = Double.parseDouble(storeInfoStrs[counter * 2 + 0]);
-        results[counter * 2 + 1] = Double.parseDouble(storeInfoStrs[counter * 2 + 1]);
-      } // for
-      
-      mongoClient.close();
-      
-      return results;
-    } // if
-    else
-    {
-      double[] allZeroes = new double[2];
-      for (double number : allZeroes)
-        number = 0.0;
-      
-      mongoClient.close();
-      return allZeroes;
-    } // else
-  } // getAllSearchedStoresSorted
-  
-  public static double[] getRecommendedStoresSorted(String username, int numOfStores)
-  {
-    // Create an instance of MongoClient with the default credentials.
-    MongoClient mongoClient = new MongoClient( "localhost" , 27017 );
-    
-    // Get the database from the client.
-    MongoDatabase db = mongoClient.getDatabase("testdb");
-    
-    // Get the collection instances.
-    MongoCollection<Document> collectionUsers = db.getCollection("users");
-    
-    // Check if the username exists in the User collection.
-    MongoCursor<Document> usersCursor = 
-        collectionUsers.find(eq("username", username)).iterator();
-    
-    // If the user already exists in the Users collection.
-    if (usersCursor.hasNext())
-    {
-      Document theUser = usersCursor.next();
-      String storesStr = theUser.getString("numOfSearchesStores");
-      String[] storeInfoStrs = storesStr.split(" ");
+      String locationsStr = theUser.getString("numOfSearchesLocations");
+      String[] storeInfoStrs = locationsStr.split(" ");
 
-      int numOfResultStores = numOfStores;
-      int numOfavailableStores = storeInfoStrs.length / 2;
-      if (numOfStores > numOfavailableStores)
-        numOfResultStores = numOfavailableStores;
+      int resultCounter = 0;
       
-      double[] results = new double[numOfResultStores * 2];
-      for (int counter = 0; counter < numOfResultStores; counter++)
+      // Use arraylist for keeping all the nearby stores.
+      ArrayList<Store> stores = new ArrayList<>();
+      
+      for (int counter = 0; counter < storeInfoStrs.length / 2; counter++)
       {
-        results[counter * 2 + 0] = Double.parseDouble(storeInfoStrs[counter * 2 + 0]);
-        results[counter * 2 + 1] = Double.parseDouble(storeInfoStrs[counter * 2 + 1]);
+        double storeLat = Double.parseDouble(storeInfoStrs[counter * 2 + 0]);
+        double storeLng = Double.parseDouble(storeInfoStrs[counter * 2 + 1]);
+        
+        MongoCursor<Document> storesCursor = 
+            collectionStores.find(
+                eq("latitude", storeLat)).iterator();
+        
+        if (storesCursor.hasNext())
+        {
+          Document theStore = storesCursor.next();
+
+          // If the store is at most 1km away from the user.
+          if (distance(latitude, longitude, storeLat, storeLng) < 1000)
+          {
+            stores.add(new Store(storeLat, storeLng, theStore.getInteger("numOfSearches"), 
+                theStore.getString("address"), theStore.getString("category")));
+            
+            resultCounter++;
+          } // if
+        } // if
+        //results[counter * 2 + 0] = Double.parseDouble(storeInfoStrs[counter * 2 + 0]);
+        //results[counter * 2 + 1] = Double.parseDouble(storeInfoStrs[counter * 2 + 1]);
       } // for
       
+      if (resultCounter > maxNumOfResults)
+        resultCounter = maxNumOfResults;
+      Store[] results = new Store[resultCounter];
+      
+      for (int index = 0; index < resultCounter; index++)
+        results[index] = stores.get(index);
+
       mongoClient.close();
       
       return results;
     } // if
     else
     {
-      double[] allZeroes = new double[numOfStores * 2];
-      for (double number : allZeroes)
-        number = 0.0;
+      Store[] allZeroes = new Store[0];
       
       mongoClient.close();
       return allZeroes;
     } // else
   } // getUserRecommendation
   
-  public static double[] nearbySearch(String username, double latitude, double longitude)
+  public static Store[] nearbySearch(String username, double latitude, double longitude, 
+      int maxNumOfResults)
   {
     // Create an instance of MongoClient with the default credentials.
     MongoClient mongoClient = new MongoClient( "localhost" , 27017 );
@@ -300,8 +282,8 @@ public class MongoDBSearch
         double storeLat = theStore.getDouble("latitude");
         double storeLng = theStore.getDouble("longitude");
 
-        // If the store is at most 1km away from the user.
-        if (distance(latitude, longitude, storeLat, storeLng) < 1000)
+        // If the store is at most 500m away from the user.
+        if (distance(latitude, longitude, storeLat, storeLng) < 500)
         {
           stores.add(new Store(storeLat, storeLng, theStore.getInteger("numOfSearches"), 
               theStore.getString("address"), theStore.getString("category")));
@@ -316,30 +298,28 @@ public class MongoDBSearch
         storesSorted = stores.toArray(new Store[0]);
         Arrays.sort(storesSorted);
       } // if
-      // Return the top 5 stores as the result.
-      int numOfResultStores = 5;
+      
+      // Return the top few stores as the result.
+      int numOfResultStores = maxNumOfResults;
       if (storesSorted == null)
         numOfResultStores = 0;
-      else if (storesSorted.length < 5)
+      else if (storesSorted.length < maxNumOfResults)
         numOfResultStores = storesSorted.length;
-      double[] results = new double[numOfResultStores * 2];
+      Store[] results = new Store[numOfResultStores];
 
       for (int index = 0; index < numOfResultStores; index++)
       {
-        results[index * 2] = storesSorted[index].getLatitude();
-        results[index * 2 + 1] = storesSorted[index].getLongitude();
+        results[index] = storesSorted[index];
       }
       
       if (results.length == 0)
-        results = new double[] {0.0, 0.0};
+        results = new Store[0];
 
       return results;
     } // if
     else
     {
-      double[] allZeroes = new double[2];
-      for (double number : allZeroes)
-        number = 0.0;
+      Store[] allZeroes = new Store[0];
       
       mongoClient.close();
       return allZeroes;
