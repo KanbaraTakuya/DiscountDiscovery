@@ -19,24 +19,30 @@ function nearbySearch() {
 }
 
 function addNearbySearchMarkers() {
-	for (var i = 0; i < locationsNearbyArr.length / 2; i++) {
+	for (var i = 0; i < namesNearbyArr.length; i++) {
 		var markerLat = locationsNearbyArr[i * 2];
 		var markerLng = locationsNearbyArr[i * 2 + 1];
 		var markerPos = { lat:0.0, lng: 0.0 };
 		markerPos.lat = markerLat;
 		markerPos.lng = markerLng;
-		addNearbySearchMarker(markerPos);
+		var name = namesNearbyArr[i];
+		var address = addressesNearbyArr[i];
+		var category = categoriesNearbyArr[i];
+		addNearbySearchMarker(markerPos, name, address, category);
 	}
 }
 
 function addUserRecommendationMarkers() {
-	for (var i = 0; i < locationsUserRecommendationArr.length / 2; i++) {
+	for (var i = 0; i < namesUserRecommendationArr.length; i++) {
 		var markerLat = locationsUserRecommendationArr[i * 2];
 		var markerLng = locationsUserRecommendationArr[i * 2 + 1];
 		var markerPos = { lat:0.0, lng: 0.0 };
 		markerPos.lat = markerLat;
 		markerPos.lng = markerLng;
-		addUserRecommendationMarker(markerPos);
+		var name = namesUserRecommendationArr[i];
+		var address = addressesUserRecommendationArr[i];
+		var category = categoriesUserRecommendationArr[i];
+		addUserRecommendationMarker(markerPos, name, address, category);
 	}
 }
 				

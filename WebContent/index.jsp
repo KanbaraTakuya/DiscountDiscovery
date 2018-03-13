@@ -23,9 +23,33 @@
       if ((double[])session.getAttribute("locationsUserRecommendation") != null)
         locationsUserRecommendation = (double[])session.getAttribute("locationsUserRecommendation");
         
+      String[] namesUserRecommendation = null;
+      if ((String[])session.getAttribute("namesUserRecommendation") != null)
+        namesUserRecommendation = (String[])session.getAttribute("namesUserRecommendation");
+      
+      String[] addressesUserRecommendation = null;
+      if ((String[])session.getAttribute("addressesUserRecommendation") != null)
+        addressesUserRecommendation = (String[])session.getAttribute("addressesUserRecommendation");
+      
+      String[] categoriesUserRecommendation = null;
+      if ((String[])session.getAttribute("categoriesUserRecommendation") != null)
+        categoriesUserRecommendation = (String[])session.getAttribute("categoriesUserRecommendation");
+        
       double[] locationsNearby = null;
       if ((double[])session.getAttribute("locationsNearby") != null)
         locationsNearby = (double[])session.getAttribute("locationsNearby");
+      
+      String[] namesNearby = null;
+      if ((String[])session.getAttribute("namesNearby") != null)
+        namesNearby = (String[])session.getAttribute("namesNearby");
+      
+      String[] addressesNearby = null;
+      if ((String[])session.getAttribute("addressesNearby") != null)
+        addressesNearby = (String[])session.getAttribute("addressesNearby");
+      
+      String[] categoriesNearby = null;
+      if ((String[])session.getAttribute("categoriesNearby") != null)
+        categoriesNearby = (String[])session.getAttribute("categoriesNearby");
     %>
   </head>
 
@@ -33,7 +57,7 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-info fixed-top">
       <div class="container">
-        <a class="navbar-brand" href="index.jsp">DISCOUNTS DISCOVERY</a>
+        <a class="navbar-brand" href="index.html">DISCOUNTS DISCOVERY</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -45,10 +69,10 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="aboutus.jsp">About us</a>
+              <a class="nav-link" href="aboutus.html">About us</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="topdeals.jsp">Top Deals</a>
+              <a class="nav-link" href="topdeals.html">Top Deals</a>
             </li>
             <li class="nav-item">
               <div class="wrap">
@@ -93,7 +117,9 @@
             	var lng = 0.0;
             	var markers = [];
             	var nearbyMarkers = [];
+            	var nearbyInfoWindows = [];
             	var recommendationMarkers = [];
+            	var recommendationInfoWindows = [];
             	
                 function initMap() {
                   map = new google.maps.Map(document.getElementById('map'), {
@@ -102,7 +128,7 @@
                   });
                   
                   map.addListener('click', function(event) {
-                	  deleteMarkers();
+                	  deleteClickMarkers();
                       addMarker(event.latLng);
                       lat = event.latLng.lat();
                       lng = event.latLng.lng();
@@ -180,7 +206,7 @@
     			<input type="hidden" id="latNearbySearch" name="latNearbySearch" value="0.0"/>
     			<input type="hidden" id="lngNearbySearch" name="lngNearbySearch" value="0.0"/>
     			Max num of results: <input type="text" id="maxNumOfResultsNearbySearch" name="maxNumOfResultsNearbySearch" value="5">
-	  			<input type="submit" value="nearbySearch" onclick="nearbySearch()"/>
+	  			<input type="submit" value="nearbySearch" onclick="nearbySearch();deleteMarkers()"/>
 	  		  </form>
 	  		  
 	  		  <form action="DiscountDiscovery" method="post">
@@ -189,8 +215,10 @@
     			<input type="hidden" id="latUserRecommendation" name="latUserRecommendation" value="0.0"/>
     			<input type="hidden" id="lngUserRecommendation" name="lngUserRecommendation" value="0.0"/>
     			Max num of results: <input type="text" id="maxNumOfResultsUserRecommendation" name="maxNumOfResultsUserRecommendation" value="5">
-	  			<input type="submit" value="userRecommendation" onclick="userRecommendation()"/>
+	  			<input type="submit" value="userRecommendation" onclick="userRecommendation();deleteMarkers()"/>
 	  		  </form>
+	  		  
+	  		  <button type="button" onclick="deleteMarkers()">Remove all markers</button>
 	  		 
 	  		  <p id="latDisplay">lat</p>
 	  		  <p id="lngDisplay">lng</p>
@@ -268,7 +296,7 @@
     class="close" title="Close Modal">&times;</span>
 
       <!-- Modal Content -->
-      <form class="modal-content animate" action="/action_page.php">
+      <form class="modal-content animate" action="/log_in.php">
         <div class="container">
           <label for="uname"><b>Username</b></label>
           <input type="text" placeholder="Enter Username" name="uname" required>
@@ -290,7 +318,7 @@
     <!-- The Modal (contains the Sign Up form) -->
     <div id="id02" class="modal">
       <span onclick="document.getElementById('id02').style.display='none'" class="close" title="Close Modal">times;</span>
-      <form class="modal-content" action="/action_page.php">
+      <form class="modal-content" action="/sign_up.php">
         <div class="container">
           <h1>Sign Up</h1>
           <p>Please fill in this form to create an account.</p>
@@ -349,7 +377,31 @@
 	<%if(locationsUserRecommendation != null) {%>
 		locationsUserRecommendationArr = new Array(<%=locationsUserRecommendation.length%>);
 		<%for (int i=0; i < locationsUserRecommendation.length; i++) {%>
-		locationsUserRecommendationArr[<%=i%>] = <%=locationsUserRecommendation[i]%>;
+			locationsUserRecommendationArr[<%=i%>] = <%=locationsUserRecommendation[i]%>;
+		<%}%>
+	<%}%>
+	
+	var namesUserRecommendationArr = new Array();
+	<%if(namesUserRecommendation != null) {%>
+		namesUserRecommendationArr = new Array(<%=namesUserRecommendation.length%>);
+		<%for (int i=0; i < namesUserRecommendation.length; i++) {%>
+			namesUserRecommendationArr[<%=i%>] = "<%=namesUserRecommendation[i]%>";
+		<%}%>
+	<%}%>
+	
+	var addressesUserRecommendationArr = new Array();
+	<%if(addressesUserRecommendation != null) {%>
+		addressesUserRecommendationArr = new Array(<%=addressesUserRecommendation.length%>);
+		<%for (int i=0; i < addressesUserRecommendation.length; i++) {%>
+			addressesUserRecommendationArr[<%=i%>] = "<%=addressesUserRecommendation[i]%>";
+		<%}%>
+	<%}%>
+	
+	var categoriesUserRecommendationArr = new Array();
+	<%if(categoriesUserRecommendation != null) {%>
+		categoriesUserRecommendationArr = new Array(<%=categoriesUserRecommendation.length%>);
+		<%for (int i=0; i < categoriesUserRecommendation.length; i++) {%>
+			categoriesUserRecommendationArr[<%=i%>] = "<%=categoriesUserRecommendation[i]%>";
 		<%}%>
 	<%}%>
 	
@@ -360,6 +412,30 @@
 			locationsNearbyArr[<%=i%>] = <%=locationsNearby[i]%>;
 		<%}%>
 	<%}%>	
+	
+	var namesNearbyArr = new Array();
+	<%if(namesNearby != null) {%>
+		namesNearbyArr = new Array(<%=namesNearby.length%>);
+		<%for (int i=0; i < namesNearby.length; i++) {%>
+			namesNearbyArr[<%=i%>] = "<%=namesNearby[i]%>";
+		<%}%>
+	<%}%>
+	
+	var addressesNearbyArr = new Array();
+	<%if(addressesNearby != null) {%>
+		addressesNearbyArr = new Array(<%=addressesNearby.length%>);
+		<%for (int i=0; i < addressesNearby.length; i++) {%>
+			addressesNearbyArr[<%=i%>] = "<%=addressesNearby[i]%>";
+		<%}%>
+	<%}%>
+	
+	var categoriesNearbyArr = new Array();
+	<%if(categoriesNearby != null) {%>
+		categoriesNearbyArr = new Array(<%=categoriesNearby.length%>);
+		<%for (int i=0; i < categoriesNearby.length; i++) {%>
+			categoriesNearbyArr[<%=i%>] = "<%=categoriesNearby[i]%>";
+		<%}%>
+	<%}%>
 	
 	function updateLatAndLng() {
 		document.getElementById("latDisplay").innerHTML = lat.toString();
@@ -374,20 +450,51 @@
     	markers.push(marker);
     }
 	
-	function addNearbySearchMarker(location) {
+	function addNearbySearchMarker(location, name, address, category) {
+		var contentString = '<h1 id="nearbyHeading" class="firstHeading">' 
+			+ name + '</h1>'
+			+ '<p><b>Address: </b>' + address + '</p>'
+			+ '<p><b>Category: </b>' + category + '</p>';
+		var infowindow = new google.maps.InfoWindow({
+		    content: contentString
+		  });
     	var marker = new google.maps.Marker({
     		position: location,
-    		map: map
+    		map: map,
+    		title: name
     	});
+    	marker.addListener('click', function() {
+    	    infowindow.open(map, marker);
+    	  });
+    	nearbyInfoWindows.push(infowindow);
     	nearbyMarkers.push(marker);
     }
 	
-	function addUserRecommendationMarker(location) {
+	function addUserRecommendationMarker(location, name, address, category) {
+		var contentString = '<h1 id="userRecommendationHeading" class="firstHeading">' 
+			+ name + '</h1>'
+			+ '<p><b>Address: </b>' + address + '</p>'
+			+ '<p><b>Category: </b>' + category + '</p>';
+	  	var infowindow = new google.maps.InfoWindow({
+		    content: contentString
+		  });
 		var marker = new google.maps.Marker({
 	    	position: location,
-	    	map: map
+	    	map: map,
+    		title: name
 	    });
+		marker.addListener('click', function() {
+    	    infowindow.open(map, marker);
+    	  });
+		recommendationInfoWindows.push(infowindow);
 		recommendationMarkers.push(marker);
+	}
+	
+	// Sets the map on all click markers.
+	function setMapOnClick(map) {
+		for (var i = 0; i < markers.length; i++) {
+      		markers[i].setMap(map);
+    	}
 	}
 	
 	// Sets the map on all markers in the array.
@@ -403,9 +510,19 @@
     	}
     }
 	
+ 	// Removes all click markers from the map, but keeps them in the array.
+    function clearClickMarkers() {
+    	setMapOnClick(null);
+	}
+	
 	// Removes the markers from the map, but keeps them in the array.
     function clearMarkers() {
     	setMapOnAll(null);
+	}
+	
+	// Deletes all click markers.
+	function deleteClickMarkers() {
+		clearClickMarkers();
 	}
 	
  	// Deletes all markers in the array by removing references to them.

@@ -210,7 +210,7 @@ public class MongoDBSearch
           // If the store is at most 1km away from the user.
           if (distance(latitude, longitude, storeLat, storeLng) < 1000)
           {
-            stores.add(new Store(storeLat, storeLng, theStore.getInteger("numOfSearches"), 
+            stores.add(new Store(storeLat, storeLng, theStore.getString("name"), 
                 theStore.getString("address"), theStore.getString("category")));
             
             resultCounter++;
@@ -285,7 +285,7 @@ public class MongoDBSearch
         // If the store is at most 500m away from the user.
         if (distance(latitude, longitude, storeLat, storeLng) < 500)
         {
-          stores.add(new Store(storeLat, storeLng, theStore.getInteger("numOfSearches"), 
+          stores.add(new Store(storeLat, storeLng, theStore.getString("name"), 
               theStore.getString("address"), theStore.getString("category")));
         } // if
       } // while

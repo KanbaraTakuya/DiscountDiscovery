@@ -149,7 +149,12 @@ form.example::after {
     margin-left: 72%;
     margin-top:0%;
     border: 1px solid #888;
-    width: 12%; /* Could be more or less, depending on screen size */
+    width: 15%; /* Could be more or less, depending on screen size */
+}
+
+input {
+    width: 100%;
+    padding: 0 20px;
 }
 
 /* The Close Button */

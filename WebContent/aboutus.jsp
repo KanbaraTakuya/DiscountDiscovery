@@ -56,9 +56,8 @@ h1 {
                 </form>
               </div>
             </li>
-
             <li class="nav-item">
-              <a class="nav-link" href="#">Log In</a>
+              <a class="nav-link" href='#' onclick="document.getElementById('id01').style.display='block'">Log In</a>
             </li>
           </ul>
         </div>
@@ -123,6 +122,60 @@ h1 {
 
     </div>
     <!-- /.container -->
+
+    <!-- The Modal -->
+    <div id="id01" class="modal">
+      <span onclick="document.getElementById('id01').style.display='none'"
+    class="close" title="Close Modal">&times;</span>
+
+      <!-- Modal Content -->
+      <form class="modal-content animate" action="/action_page.php">
+        <div class="container">
+          <label for="uname"><b>Username</b></label>
+          <input type="text" placeholder="Enter Username" name="uname" required>
+
+          <label for="psw"><b>Password</b></label>
+          <input type="password" placeholder="Enter Password" name="psw" required>
+
+          <button type="submit">Log In</button>
+          <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
+        </div>
+
+        <div class="container" style="background-color:#f1f1f1">
+          <span class="psw">Don't have an account? <a href="#" onclick="document.getElementById('id02').style.display='block';
+                document.getElementById('id01').style.display='none'" class="cancelbtn">Register Here</a></span>
+        </div>
+      </form>
+    </div>
+
+    <!-- The Modal (contains the Sign Up form) -->
+    <div id="id02" class="modal">
+      <span onclick="document.getElementById('id02').style.display='none'" class="close" title="Close Modal">times;</span>
+      <form class="modal-content" action="/action_page.php">
+        <div class="container">
+          <h1>Sign Up</h1>
+          <p>Please fill in this form to create an account.</p>
+          <hr>
+
+          <label for="uname"><b>Username</b></label>
+          <input type="text" placeholder="Enter your Username" name="uname" required>
+
+          <label for="email"><b>Email</b></label>
+          <input type="text" placeholder="Enter your Email" name="email" required>
+
+          <label for="psw"><b>Password</b></label>
+          <input type="password" placeholder="Enter your Password" name="psw" required>
+
+          <label for="psw-repeat"><b>Repeat Password</b></label>
+          <input type="password" placeholder="Repeat your Password" name="psw-repeat" required>
+
+          <div class="clearfix">
+            <button type="button" onclick="document.getElementById('id02').style.display='none'" class="cancelbtn">Cancel</button>
+            <button type="submit">Sign Up</button>
+          </div>
+        </div>
+      </form>
+    </div>
 
     <!-- Footer -->
     <footer class="py-5 bg-info">
