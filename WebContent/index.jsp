@@ -229,7 +229,7 @@
     			<input type="hidden" id="lngUserRecommendation" name="lngUserRecommendation" value="0.0"/>
     			Max num of results: <input type="text" id="maxNumOfResultsUserRecommendation" name="maxNumOfResultsUserRecommendation" value="5" style="width:10%">
 	  			<br>
-	  			<input type="submit" value="userRecommendation" onclick="userRecommendation();deleteMarkers()" style="width:30%"/>
+	  			<input type="submit" value="User Recommendation" onclick="userRecommendation();deleteMarkers()" style="width:30%"/>
 	  		  </form>
 	  		  <br>
               <form action="DiscountDiscovery" method="post">
@@ -239,7 +239,7 @@
     			<input type="hidden" id="lngNearby" name="lngNearby" value="0.0"/>
     			Max num of results: <input type="text" id="maxNumOfResultsNearby" name="maxNumOfResultsNearby" value="5" style="width:10%">
 	  			<br>
-	  			<input type="submit" value="nearbySearch" onclick="nearbySearch();deleteMarkers()" style="width:30%"/>
+	  			<input type="submit" value="Nearby Search" onclick="nearbySearch();deleteMarkers()" style="width:30%"/>
 	  		  </form> 	
 	  		  <br>
 			  <form action="DiscountDiscovery" method="post">
@@ -280,7 +280,7 @@
 			      <option value="Vegetarian">Vegetarian</option>
 			    </select>
 			    <br>
-	  			<input type="submit" value="categorySearch" onclick="categorySearch();deleteMarkers()" style="width:30%"/>
+	  			<input type="submit" value="Category Search" onclick="categorySearch();deleteMarkers()" style="width:30%"/>
 	  		  </form>   
 	  		  <br>
 	  		  <button type="button" onclick="deleteMarkers()" style="width:30%">Remove all markers</button> 		 
