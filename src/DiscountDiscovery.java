@@ -50,9 +50,11 @@ public class DiscountDiscovery extends HttpServlet {
 		
 		System.out.println("Request received");
 		System.out.println("request.getParameter(usernameUserRecommendation): " + request.getParameter("usernameUserRecommendation"));
-		System.out.println("request.getParameter(usernameNearbySearch): " + request.getParameter("usernameNearbySearch"));
+		System.out.println("request.getParameter(usernameNearby): " + request.getParameter("usernameNearby"));
+		System.out.println("request.getParameter(usernameCategory): " + request.getParameter("usernameCategory"));
 		System.out.println("request.getParameter(isUserRecommendation): " + request.getParameter("isUserRecommendation"));
-		System.out.println("request.getParameter(isNearbySearch): " + request.getParameter("isNearbySearch"));
+		System.out.println("request.getParameter(isNearby): " + request.getParameter("isNearby"));
+		System.out.println("request.getParameter(isCategory): " + request.getParameter("isCategory"));
 		
 		if (request.getParameter("usernameUserRecommendation") != null
         && request.getParameter("usernameUserRecommendation") != ""
@@ -126,10 +128,10 @@ public class DiscountDiscovery extends HttpServlet {
         
       } // catch
     } // if
-    else if (request.getParameter("usernameNearbySearch") != null
-        && request.getParameter("usernameNearbySearch") != ""
-        && request.getParameter("isNearbySearch") != null
-        && request.getParameter("isNearbySearch").equals("true"))
+    else if (request.getParameter("usernameNearby") != null
+        && request.getParameter("usernameNearby") != ""
+        && request.getParameter("isNearby") != null
+        && request.getParameter("isNearby").equals("true"))
     {
       try {
         Long startTime = System.nanoTime();
@@ -144,18 +146,17 @@ public class DiscountDiscovery extends HttpServlet {
         int maxNumOfResults = 0;
         Store[] resultStores = null;
         
-        username = request.getParameter("usernameNearbySearch");
+        username = request.getParameter("usernameNearby");
         
-        if (request.getParameter("latNearbySearch") != null)
-          latitude = Double.parseDouble(request.getParameter("latNearbySearch"));
-        if (request.getParameter("lngNearbySearch") != null)
-          longitude = Double.parseDouble(request.getParameter("lngNearbySearch"));
+        if (request.getParameter("latNearby") != null)
+          latitude = Double.parseDouble(request.getParameter("latNearby"));
+        if (request.getParameter("lngNearby") != null)
+          longitude = Double.parseDouble(request.getParameter("lngNearby"));
         
-        if (request.getParameter("maxNumOfResultsNearbySearch") != null)
-          maxNumOfResults = Integer.parseInt(request.getParameter("maxNumOfResultsNearbySearch"));
-        System.out.println("maxNumOfResults: " + maxNumOfResults);
+        if (request.getParameter("maxNumOfResultsNearby") != null)
+          maxNumOfResults = Integer.parseInt(request.getParameter("maxNumOfResultsNearby"));
         
-        resultStores = MongoDBSearch.nearbySearch(username, latitude, longitude, maxNumOfResults);
+        resultStores = MongoDBSearch.getNearbyPopularStoresSorted(username, latitude, longitude, maxNumOfResults);
         
         double[] locations = new double[resultStores.length * 2];
         String[] names = new String[resultStores.length];
@@ -182,6 +183,82 @@ public class DiscountDiscovery extends HttpServlet {
           session.setAttribute("namesNearby", names);
           session.setAttribute("addressesNearby", addresses);
           session.setAttribute("categoriesNearby", categories);
+          session.setAttribute("loading", false);
+        } // if
+        
+        System.out.println("Username: " + username);
+        System.out.println("locations: " + Arrays.toString(locations));
+        System.out.println("names: " + Arrays.toString(names));
+        System.out.println("addresses: " + Arrays.toString(addresses));
+        System.out.println("categories: " + Arrays.toString(categories));
+      } // try
+      catch (Exception exception) {
+        
+      } // catch
+    } // else if
+    else if (request.getParameter("usernameCategory") != null
+        && request.getParameter("usernameCategory") != ""
+        && request.getParameter("isCategory") != null
+        && request.getParameter("isCategory").equals("true"))
+    {
+      try {
+        Long startTime = System.nanoTime();
+        
+        HttpSession session = request.getSession(true);
+        
+        session.setAttribute("loading", true);
+        
+        String username = "";
+        double latitude = 0.0;
+        double longitude = 0.0;
+        String category = null;
+        int maxNumOfResults = 0;
+        Store[] resultStores = null;
+        
+        username = request.getParameter("usernameCategory");
+        
+        if (request.getParameter("latCategory") != null)
+          latitude = Double.parseDouble(request.getParameter("latCategory"));
+        if (request.getParameter("lngCategory") != null)
+          longitude = Double.parseDouble(request.getParameter("lngCategory"));
+        
+        if (request.getParameter("categoryCategory") != null)
+          category = request.getParameter("categoryCategory");
+        
+        if (request.getParameter("maxNumOfResultsCategory") != null)
+          maxNumOfResults = Integer.parseInt(request.getParameter("maxNumOfResultsCategory"));
+        
+        resultStores = MongoDBSearch.getStoresByCategorySorted(username, latitude, longitude, category, maxNumOfResults);
+        
+        double[] locations = new double[resultStores.length * 2];
+        String[] names = new String[resultStores.length];
+        String[] addresses = new String[resultStores.length];
+        String[] categories = new String[resultStores.length];
+        for (int index = 0; index < resultStores.length; index++)
+        {
+          locations[index * 2] = resultStores[index].getLatitude();
+          locations[index * 2 + 1] = resultStores[index].getLongitude();
+          names[index] = resultStores[index].getName();
+          addresses[index] = resultStores[index].getAddress();
+          categories[index] = resultStores[index].getCategory();
+        } // for
+        
+        Long endTime = System.nanoTime();
+        
+        if (session != null) 
+        {
+          session.setAttribute("locationsUserRecommendation", null);
+          session.setAttribute("namesUserRecommendation", null);
+          session.setAttribute("addressesUserRecommendation", null);
+          session.setAttribute("categoriesUserRecommendation", null);
+          session.setAttribute("locationsNearby", null);
+          session.setAttribute("namesNearby", null);
+          session.setAttribute("addressesNearby", null);
+          session.setAttribute("categoriesNearby", null);
+          session.setAttribute("locationsCategory", locations);
+          session.setAttribute("namesCategory", names);
+          session.setAttribute("addressesCategory", addresses);
+          session.setAttribute("categoriesCategory", categories);
           session.setAttribute("loading", false);
         } // if
         

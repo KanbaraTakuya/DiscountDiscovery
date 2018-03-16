@@ -22,7 +22,7 @@ public class MongoDBSearch
     MongoClient mongoClient = new MongoClient( "localhost" , 27017 );
     
     // Get the database from the client.
-    MongoDatabase db = mongoClient.getDatabase("testdb");
+    MongoDatabase db = mongoClient.getDatabase("discountdiscoverydb");
     
     // Get the collection instances.
     MongoCollection<Document> collectionHistory = db.getCollection("history");
@@ -172,7 +172,7 @@ public class MongoDBSearch
     MongoClient mongoClient = new MongoClient( "localhost" , 27017 );
     
     // Get the database from the client.
-    MongoDatabase db = mongoClient.getDatabase("testdb");
+    MongoDatabase db = mongoClient.getDatabase("discountdiscoverydb");
     
     // Get the collection instances.
     MongoCollection<Document> collectionUsers = db.getCollection("users");
@@ -238,16 +238,16 @@ public class MongoDBSearch
       mongoClient.close();
       return allZeroes;
     } // else
-  } // getUserRecommendation
+  } // getRecommendedStoresSorted
   
-  public static Store[] nearbySearch(String username, double latitude, double longitude, 
+  public static Store[] getNearbyPopularStoresSorted(String username, double latitude, double longitude, 
       int maxNumOfResults)
   {
     // Create an instance of MongoClient with the default credentials.
     MongoClient mongoClient = new MongoClient( "localhost" , 27017 );
     
     // Get the database from the client.
-    MongoDatabase db = mongoClient.getDatabase("testdb");
+    MongoDatabase db = mongoClient.getDatabase("discountdiscoverydb");
     
     // Get the collection instances.
     MongoCollection<Document> collectionUsers = db.getCollection("users");
@@ -289,7 +289,7 @@ public class MongoDBSearch
               theStore.getString("address"), theStore.getString("category")));
         } // if
       } // while
-      System.out.println("stores.size(): " + stores.size());
+
       // Sort the array of stores in descending order 
       Store[] storesSorted = null;
 
@@ -324,7 +324,84 @@ public class MongoDBSearch
       mongoClient.close();
       return allZeroes;
     } // else
-  } // nearbySearch
+  } // getNearbyPopularStoresSorted
+  
+  public static Store[] getStoresByCategorySorted(String username, double latitude, double longitude, 
+      String category, int maxNumOfResults)
+  {
+    // Create an instance of MongoClient with the default credentials.
+    MongoClient mongoClient = new MongoClient( "localhost" , 27017 );
+    
+    // Get the database from the client.
+    MongoDatabase db = mongoClient.getDatabase("discountdiscoverydb");
+    
+    // Get the collection instances.
+    MongoCollection<Document> collectionUsers = db.getCollection("users");
+    MongoCollection<Document> collectionStores = db.getCollection("stores");
+    
+    // Check if the username exists in the User collection.
+    MongoCursor<Document> usersCursor = 
+        collectionUsers.find(eq("username", username)).iterator();
+    
+    // If the user already exists in the Users collection.
+    if (usersCursor.hasNext())
+    {
+      MongoCursor<Document> storesCursor = 
+          collectionStores.find().iterator();
+      
+      // Use arraylist for keeping all the nearby stores.
+      ArrayList<Store> stores = new ArrayList<>();
+      
+      while (storesCursor.hasNext())
+      {
+        Document theStore = storesCursor.next();
+        double storeLat = theStore.getDouble("latitude");
+        double storeLng = theStore.getDouble("longitude");
+        String storeCategory = theStore.getString("category");
+
+        // If the store is at most 2km away from the user.
+        if (storeCategory.equals(category) && distance(latitude, longitude, storeLat, storeLng) < 2000)
+        {
+          stores.add(new Store(storeLat, storeLng, theStore.getString("name"), 
+              theStore.getString("address"), storeCategory));
+        } // if
+      } // while
+      
+      // Sort the array of stores in descending order 
+      Store[] storesSorted = null;
+
+      if (stores != null && stores.size() > 0)
+      {
+        storesSorted = stores.toArray(new Store[0]);
+        Arrays.sort(storesSorted);
+      } // if
+      
+      // Return the top few stores as the result.
+      int numOfResultStores = maxNumOfResults;
+      if (storesSorted == null)
+        numOfResultStores = 0;
+      else if (storesSorted.length < maxNumOfResults)
+        numOfResultStores = storesSorted.length;
+      Store[] results = new Store[numOfResultStores];
+
+      for (int index = 0; index < numOfResultStores; index++)
+      {
+        results[index] = storesSorted[index];
+      }
+      
+      if (results.length == 0)
+        results = new Store[0];
+
+      return results;
+    } // if
+    else
+    {
+      Store[] allZeroes = new Store[0];
+      
+      mongoClient.close();
+      return allZeroes;
+    } // else
+  } // getStoresByCategorySorted
   
   public static double distance(double lat1, double lng1, double lat2, double lng2) 
   {
