@@ -115,6 +115,11 @@ public class DiscountDiscovery extends HttpServlet {
           session.setAttribute("namesNearby", null);
           session.setAttribute("addressesNearby", null);
           session.setAttribute("categoriesNearby", null);
+          session.setAttribute("locationsCategory", null);
+          session.setAttribute("namesCategory", null);
+          session.setAttribute("addressesCategory", null);
+          session.setAttribute("categoriesCategory", null);
+          session.setAttribute("startTime", startTime);
           session.setAttribute("loading", false);
         } // if
         
@@ -183,6 +188,11 @@ public class DiscountDiscovery extends HttpServlet {
           session.setAttribute("namesNearby", names);
           session.setAttribute("addressesNearby", addresses);
           session.setAttribute("categoriesNearby", categories);
+          session.setAttribute("locationsCategory", null);
+          session.setAttribute("namesCategory", null);
+          session.setAttribute("addressesCategory", null);
+          session.setAttribute("categoriesCategory", null);
+          session.setAttribute("startTime", startTime);
           session.setAttribute("loading", false);
         } // if
         
@@ -259,6 +269,7 @@ public class DiscountDiscovery extends HttpServlet {
           session.setAttribute("namesCategory", names);
           session.setAttribute("addressesCategory", addresses);
           session.setAttribute("categoriesCategory", categories);
+          session.setAttribute("startTime", startTime);
           session.setAttribute("loading", false);
         } // if
         

@@ -7,6 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 
     <title>Portfolio Item - Start Bootstrap Template</title>
 
@@ -35,6 +38,7 @@ footer {
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-info fixed-top">
       <div class="container">
+	<img class="logo" src="img/logo.png" alt="Discounts Discovery" href="index.jsp">
         <a class="navbar-brand" href="index.jsp">DISCOUNTS DISCOVERY</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -49,12 +53,13 @@ footer {
             <li class="nav-item">
               <a class="nav-link" href="aboutus.jsp">About us</a>
             </li>
-            <li class="nav-item">
+             <!-- <li class="nav-item">
               <a class="nav-link" href="topdeals.jsp">Top Deals</a>
             </li>
+          -->
             <li class="nav-item">
               <div class="wrap">
-                <form class="search" action="/action_page.php" style="margin:ato;max-width:300px">
+                <form class="search" action="topdeals.jsp" style="margin:ato;max-width:300px">
                   <input type="text" class="searchTerm" placeholder="What are you looking for?" name="search">
                   <button type="submit" class="searchButton">
                   <i class="fa fa-search"></i>

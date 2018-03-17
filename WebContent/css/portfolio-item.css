@@ -52,15 +52,22 @@ form.example::after {
     display: table;
 }
 #loadMore {
-  color: blue;
-  cursor: pointer;
+   padding-bottom: 30px;
+   padding-top: 30px;
+   padding-left: 20px; 
+   width: 100%;
 }
-#loadMore:hover {
-  color: black;
+#loadMore a {
+   background: #042a63;
+   border-radius: 3px;
+   color: white;
+   display: inline-block;
+   padding: 10px 30px;
+   transition: all 0.25s ease-out;
+   -webkit-font-smoothing: antialiased;
 }
-#showLess {
-  color: green;
-  cursor: pointer;
+#loadMore a:hover {
+   background-color: #021737;
 }
 .search {
   height: 20px;
@@ -87,7 +94,7 @@ form.example::after {
   position: absolute;
   right: -50px;
   width: 40px;
-  height: 20px;
+  height: 35px;
   border: 1px solid #00B4CC;
   background: #00B4CC;
   text-align: center;
@@ -189,4 +196,14 @@ input {
 @keyframes animatezoom {
     from {transform: scale(0)}
     to {transform: scale(1)}
+}
+
+.blogTxt {
+	width: 750px;
+	padding-left: 20px;
+}
+
+.logo {
+    height: 40px;
+    padding: 5px;
 }
