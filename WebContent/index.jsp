@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -536,8 +537,30 @@
 	    }
 	  });
 	});
-	
 	</script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function () {
+      $('#sidebarCollapse').on('click', function () {
+        $('#sidebar').toggleClass('active');
+      });
+      if ($('#lca-form')[0]) {
+        document.getElementById("btn-signin").onclick = function() {
+          document.getElementById("lca-form").action = "login.php";
+        };
+        document.getElementById("btn-createaccount").onclick = function() {
+          document.getElementById("lca-form").action = "createaccount.php";
+        };
+      }
+      $('.datalink').on('click', function(e){
+        //preventing the default link redirection
+        e.preventDefault();
+        
+        $('.myValue').val($(this).data('value'));
+        $(this).closest('form').submit();
+      });
+    });
+    </script>
 	
 	<!-- JavaScript -->
 	<script src="js/mongodb.js" type="text/javascript"></script>
