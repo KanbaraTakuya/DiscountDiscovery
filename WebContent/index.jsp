@@ -176,36 +176,7 @@
                         lng: position.coords.longitude
 
                       };
-                      //the position of marker UoM currently
-                      var markerPos = {
-                        lat: 53.464824,
-                        lng: -2.231782
-                      }
-                      //content of marker
-                      var contentString = '<div id="content">'+
-    '<div id="siteNotice">'+
-    '</div>'+
-    '<h1 id="firstHeading" class="firstHeading">The University of Manchester</h1>'+
-    '<div id="bodyContent">'+
-    '<p><b>The University of Manchester</b> is our home!</p>'+
-    '<p>Attribution: Manchester, <a href="http://www.manchester.ac.uk/">'+
-    'Website</a> '+
-    '</div>'+
-    '</div>';
-              //marker with a information window
-              var infowindow = new google.maps.InfoWindow({
-                               content: contentString
-                               });
-
-               var marker = new google.maps.Marker({
-                            position: markerPos,
-                            map: map,
-                            title: 'Manchester'
-                            });
-               //when marker is selected, information window appears
-               marker.addListener('click', function() {
-                                  infowindow.open(map, marker);
-                                  });
+                     
                       //zoom in map
                       map.setCenter(pos);
                       map.setZoom(12);
@@ -450,59 +421,34 @@
     <!-- /.container -->
 
 
-
     <!-- The Modal -->
     <div id="id01" class="modal">
       <span onclick="document.getElementById('id01').style.display='none'"
-    class="close" title="Close Modal">&times;</span>
+       class="close" title="Close Modal">&times;</span>
 
       <!-- Modal Content -->
-      <form class="modal-content animate" action="/log_in.php">
+      <form class="modal-content animate" id="lca-form" method="post">
         <div class="container">
-          <label for="uname"><b>Username</b></label>
-          <input type="text" placeholder="Enter Username" name="uname" required>
+          <label for="inputUsername">Username</label>
+          <input type="name" name="username" id="inputUsername" placeholder="Username" required autofocus>
+          
+          <!--<label for="inputUsername">Email</label>
+          <input type="email" name="email" id="inputUsername" placeholder="Username" required>
 
-          <label for="psw"><b>Password</b></label>
-          <input type="password" placeholder="Enter Password" name="psw" required>
+          <label for="inputPassword">Password</label>
+          <input type="password" name="confpassword" id="inputPassword" placeholder="Password" required>-->
 
-          <button type="submit">Log In</button>
-          <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
-        </div>
+          <label for="inputPassword">Confirm Password</label>
+          <input type="password" name="password" id="inputPassword" placeholder="Password" required>
 
-        <div class="container" style="background-color:#f1f1f1">
-          <span class="psw">Don't have an account? <a href="#" onclick="document.getElementById('id02').style.display='block';
-                document.getElementById('id01').style.display='none'" class="cancelbtn">Register Here</a></span>
+          <div class="clearfix">
+            
+            <button type="submit" id="btn-signin">Sign in</button>
+            <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
+            <button type="submit" id="btn-createaccount">Sign Up</button>
         </div>
       </form>
     </div>
-
-    <!-- The Modal (contains the Sign Up form) -->
-    <div id="id02" class="modal">
-      <span onclick="document.getElementById('id02').style.display='none'" class="close" title="Close Modal">times;</span>
-      <form class="modal-content" action="/sign_up.php">
-        <div class="container">
-          <h1>Sign Up</h1>
-          <p>Please fill in this form to create an account.</p>
-          <hr>
-
-          <label for="uname"><b>Username</b></label>
-          <input type="text" placeholder="Enter your Username" name="uname" required>
-
-          <label for="email"><b>Email</b></label>
-          <input type="text" placeholder="Enter your Email" name="email" required>
-
-          <label for="psw"><b>Password</b></label>
-          <input type="password" placeholder="Enter your Password" name="psw" required>
-
-          <label for="psw-repeat"><b>Repeat Password</b></label>
-          <input type="password" placeholder="Repeat your Password" name="psw-repeat" required>
-
-          <div class="clearfix">
-            <button type="button" onclick="document.getElementById('id02').style.display='none'" class="cancelbtn">Cancel</button>
-            <button type="submit">Sign Up</button>
-          </div>
-        </div>
-      </form>
     </div>
 
     <!-- Footer -->

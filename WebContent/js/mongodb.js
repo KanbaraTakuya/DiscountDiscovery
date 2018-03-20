@@ -1,5 +1,5 @@
 function userRecommendation() {
-	document.getElementById("usernameUserRecommendation").value = "james";
+	document.getElementById("usernameUserRecommendation").value = "james00";
 	document.getElementById("isUserRecommendation").value = "true";
 	document.getElementById("latUserRecommendation").value = lat.toString();
 	document.getElementById("lngUserRecommendation").value = lng.toString();
@@ -18,7 +18,7 @@ function nearbySearch() {
 	document.getElementById("isUserRecommendation").value = "false";
 	document.getElementById("latUserRecommendation").value = "0.0";
 	document.getElementById("lngUserRecommendation").value = "0.0";
-	document.getElementById("usernameNearby").value = "james";
+	document.getElementById("usernameNearby").value = "james00";
 	document.getElementById("isNearby").value = "true";
 	document.getElementById("latNearby").value = lat.toString();
 	document.getElementById("lngNearby").value = lng.toString();
@@ -37,7 +37,7 @@ function categorySearch() {
 	document.getElementById("isNearby").value = "false";
 	document.getElementById("latNearby").value = "0.0";
 	document.getElementById("lngNearby").value = "0.0";
-	document.getElementById("usernameCategory").value = "james";
+	document.getElementById("usernameCategory").value = "james00";
 	document.getElementById("isCategory").value = "true";
 	document.getElementById("latCategory").value = lat.toString();
 	document.getElementById("lngCategory").value = lng.toString();

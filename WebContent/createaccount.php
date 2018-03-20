@@ -1,17 +1,26 @@
 <?php
 session_start();
 
+if (!function_exists('mysqli_init') && !extension_loaded('mysqli')) {
+    echo 'We don\'t have mysqli!!!';
+} else {
+    echo 'Phew we have it!';
+}
+
 // Load the configuration file containing your database credentials
-require_once('config.inc.php');
+//require_once('config.inc.php');
 
 // Connect to the database
-$mysqli = new mysqli($database_host, $database_user, $database_pass, $group_dbnames[0]);
+$database_host = "dbhost.cs.man.ac.uk";
+$database_user = "g20710gr";
+$database_pass = "Abcd1234";
+$group_dbnames = "2017_comp10120_x5";
+$mysqli = new mysqli($database_host, $database_user, $database_pass, $group_dbnames);
 
 // Check for errors before doing anything else
 if($mysqli -> connect_error) {
     die('Connect Error ('.$mysqli -> connect_errno.') '.$mysqli -> connect_error);
 }
-
 
 //Everything below is the same as login.php except the query we execute
 $username = "";
@@ -28,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   //We should return the user to the login page in either case
   $csuccess = createAccount($mysqli, $username, $password);
   $_SESSION['csuccess'] = $csuccess;
-  header("Location: ./index.php");
+  header("Location: ./index.jsp");
 }
 
 //Used to prevent XSS attacks, in-built php functions
