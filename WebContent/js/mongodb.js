@@ -53,7 +53,8 @@ function addUserRecommendationMarkers() {
 		var name = namesUserRecommendationArr[i];
 		var address = addressesUserRecommendationArr[i];
 		var category = categoriesUserRecommendationArr[i];
-		addUserRecommendationMarker(markerPos, name, address, category);
+		var url = urlsUserRecommendationArr[i];
+		addUserRecommendationMarker(markerPos, name, address, category, url);
 	}
 }
 
@@ -67,7 +68,8 @@ function addNearbySearchMarkers() {
 		var name = namesNearbyArr[i];
 		var address = addressesNearbyArr[i];
 		var category = categoriesNearbyArr[i];
-		addNearbySearchMarker(markerPos, name, address, category);
+		var url = urlsNearbyArr[i];
+		addNearbySearchMarker(markerPos, name, address, category, url);
 	}
 }
 
@@ -81,6 +83,7 @@ function addCategorySearchMarkers() {
 		var name = namesCategoryArr[i];
 		var address = addressesCategoryArr[i];
 		var category = categoriesCategoryArr[i];
-		addCategorySearchMarker(markerPos, name, address, category);
+		var url = urlsCategoryArr[i];
+		addCategorySearchMarker(markerPos, name, address, category, url);
 	}
 }

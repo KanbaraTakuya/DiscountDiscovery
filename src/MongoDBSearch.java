@@ -22,7 +22,7 @@ public class MongoDBSearch
     MongoClient mongoClient = new MongoClient( "localhost" , 27017 );
     
     // Get the database from the client.
-    MongoDatabase db = mongoClient.getDatabase("discountdiscoverydb");
+    MongoDatabase db = mongoClient.getDatabase("comp10120db");
     
     // Get the collection instances.
     MongoCollection<Document> collectionHistory = db.getCollection("history");
@@ -166,13 +166,13 @@ public class MongoDBSearch
   } // updateOnSearch
   
   public static Store[] getRecommendedStoresSorted(String username, double latitude, double longitude,
-      int maxNumOfResults)
+      int searchRadius, int maxNumOfResults)
   {
     // Create an instance of MongoClient with the default credentials.
     MongoClient mongoClient = new MongoClient( "localhost" , 27017 );
     
     // Get the database from the client.
-    MongoDatabase db = mongoClient.getDatabase("discountdiscoverydb");
+    MongoDatabase db = mongoClient.getDatabase("comp10120db");
     
     // Get the collection instances.
     MongoCollection<Document> collectionUsers = db.getCollection("users");
@@ -208,10 +208,10 @@ public class MongoDBSearch
           Document theStore = storesCursor.next();
 
           // If the store is at most 1km away from the user.
-          if (distance(latitude, longitude, storeLat, storeLng) < 1000)
+          if (distance(latitude, longitude, storeLat, storeLng) < searchRadius)
           {
             stores.add(new Store(storeLat, storeLng, theStore.getString("name"), 
-                theStore.getString("address"), theStore.getString("category")));
+                theStore.getString("address"), theStore.getString("category"), theStore.getString("url")));
             
             resultCounter++;
           } // if
@@ -241,13 +241,13 @@ public class MongoDBSearch
   } // getRecommendedStoresSorted
   
   public static Store[] getNearbyPopularStoresSorted(String username, double latitude, double longitude, 
-      int maxNumOfResults)
+      int searchRadius, int maxNumOfResults)
   {
     // Create an instance of MongoClient with the default credentials.
     MongoClient mongoClient = new MongoClient( "localhost" , 27017 );
     
     // Get the database from the client.
-    MongoDatabase db = mongoClient.getDatabase("discountdiscoverydb");
+    MongoDatabase db = mongoClient.getDatabase("comp10120db");
     
     // Get the collection instances.
     MongoCollection<Document> collectionUsers = db.getCollection("users");
@@ -283,10 +283,10 @@ public class MongoDBSearch
         double storeLng = theStore.getDouble("longitude");
 
         // If the store is at most 500m away from the user.
-        if (distance(latitude, longitude, storeLat, storeLng) < 500)
+        if (distance(latitude, longitude, storeLat, storeLng) < searchRadius)
         {
           stores.add(new Store(storeLat, storeLng, theStore.getString("name"), 
-              theStore.getString("address"), theStore.getString("category")));
+              theStore.getString("address"), theStore.getString("category"), theStore.getString("url")));
         } // if
       } // while
 
@@ -327,13 +327,13 @@ public class MongoDBSearch
   } // getNearbyPopularStoresSorted
   
   public static Store[] getStoresByCategorySorted(String username, double latitude, double longitude, 
-      String category, int maxNumOfResults)
+      String category, int searchRadius, int maxNumOfResults)
   {
     // Create an instance of MongoClient with the default credentials.
     MongoClient mongoClient = new MongoClient( "localhost" , 27017 );
     
     // Get the database from the client.
-    MongoDatabase db = mongoClient.getDatabase("discountdiscoverydb");
+    MongoDatabase db = mongoClient.getDatabase("comp10120db");
     
     // Get the collection instances.
     MongoCollection<Document> collectionUsers = db.getCollection("users");
@@ -360,10 +360,10 @@ public class MongoDBSearch
         String storeCategory = theStore.getString("category");
 
         // If the store is at most 2km away from the user.
-        if (storeCategory.equals(category) && distance(latitude, longitude, storeLat, storeLng) < 2000)
+        if (storeCategory.equals(category) && distance(latitude, longitude, storeLat, storeLng) < searchRadius)
         {
           stores.add(new Store(storeLat, storeLng, theStore.getString("name"), 
-              theStore.getString("address"), storeCategory));
+              theStore.getString("address"), storeCategory, theStore.getString("url")));
         } // if
       } // while
       

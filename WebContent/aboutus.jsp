@@ -79,44 +79,44 @@ h1 {
       <div class="row">
 
         <div class="col-6 col-s-9">
-          <p>Denisa</p>
+          <p class="team-member">Denisa</p>
             <img class="mw-100" src="img/denisa.jpg" width="300" height="300"
                  alt="denisa">
         </div>
 
 
         <div class="col-6 col-s-9">
-          <p>Gabija</p>
+          <p class="team-member">Gabija</p>
             <img class="mw-100" src="img/gabija.jpg" width="300" height="300"
                  alt="gabija">
         </div>
 
         <div class="col-6 col-s-9">
-          <p>Evripidis</p>
+          <p class="team-member">Evripidis</p>
             <img class="mw-100" src="img/evripidis.jpg" width="300" height="300"
                  alt="evripidis">
         </div>
 
         <div class="col-6 col-s-9">
-          <p>Oscar</p>
+          <p class="team-member">Oscar</p>
             <img class="mw-100" src="img/oscar.jpg" width="300" height="300"
                  alt="oscar">
         </div>
 
         <div class="col-6 col-s-9">
-          <p>Gabriel</p>
+          <p class="team-member">Gabriel</p>
             <img class="mw-100" src="img/gabriel.jpg" width="300" height="300"
                  alt="gabriel">
         </div>
 
         <div class="col-6 col-s-9">
-          <p>Rebecca</p>
+          <p class="team-member">Rebecca</p>
             <img class="mw-100" src="img/rebecca.jpg" width="300" height="300"
                  alt="rebecca">
         </div>
 
         <div class="col-6 col-s-9">
-          <p>Jie</p>
+          <p class="team-member">Jie</p>
             <img class="mw-100" src="img/jie.jpg" width="300" height="300"
                  alt="jie">
         </div>

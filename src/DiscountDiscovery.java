@@ -68,12 +68,12 @@ public class DiscountDiscovery extends HttpServlet {
         
         session.setAttribute("loading", true);
         
-        int maxNumOfRecommendations = 0;
-        Store[] resultStores = null;
-        
         String username = request.getParameter("usernameUserRecommendation");
+        int maxNumOfRecommendations = 0;
         double latitude = 0.0;
         double longitude = 0.0;
+        int searchRadius = 0;
+        Store[] resultStores = null;
         
         if (request.getParameter("maxNumOfResultsUserRecommendation") != null)
           maxNumOfRecommendations = Integer.parseInt(request.getParameter("maxNumOfResultsUserRecommendation"));
@@ -83,17 +83,21 @@ public class DiscountDiscovery extends HttpServlet {
         if (request.getParameter("lngUserRecommendation") != null)
           longitude = Double.parseDouble(request.getParameter("lngUserRecommendation"));
         
+        if (request.getParameter("radiusUserRecommendation") != null)
+          searchRadius = Integer.parseInt(request.getParameter("radiusUserRecommendation"));
+        
         if (maxNumOfRecommendations == 0)
           resultStores = MongoDBSearch.getRecommendedStoresSorted(username, 
-              latitude, longitude, 0);
+              latitude, longitude, searchRadius, 0);
         else
           resultStores = MongoDBSearch.getRecommendedStoresSorted(username, 
-              latitude, longitude, maxNumOfRecommendations);
+              latitude, longitude, searchRadius, maxNumOfRecommendations);
 
         double[] locations = new double[resultStores.length * 2];
         String[] names = new String[resultStores.length];
         String[] addresses = new String[resultStores.length];
         String[] categories = new String[resultStores.length];
+        String[] urls = new String[resultStores.length];
         for (int index = 0; index < resultStores.length; index++)
         {
           locations[index * 2] = resultStores[index].getLatitude();
@@ -101,6 +105,7 @@ public class DiscountDiscovery extends HttpServlet {
           names[index] = resultStores[index].getName();
           addresses[index] = resultStores[index].getAddress();
           categories[index] = resultStores[index].getCategory();
+          urls[index] = resultStores[index].getUrl();
         } // for
 
         Long endTime = System.nanoTime();
@@ -111,14 +116,17 @@ public class DiscountDiscovery extends HttpServlet {
           session.setAttribute("namesUserRecommendation", names);
           session.setAttribute("addressesUserRecommendation", addresses);
           session.setAttribute("categoriesUserRecommendation", categories);
+          session.setAttribute("urlsUserRecommendation", urls);
           session.setAttribute("locationsNearby", null);
           session.setAttribute("namesNearby", null);
           session.setAttribute("addressesNearby", null);
           session.setAttribute("categoriesNearby", null);
+          session.setAttribute("urlsNearby", null);
           session.setAttribute("locationsCategory", null);
           session.setAttribute("namesCategory", null);
           session.setAttribute("addressesCategory", null);
           session.setAttribute("categoriesCategory", null);
+          session.setAttribute("urlsCategory", null);
           session.setAttribute("startTime", startTime);
           session.setAttribute("loading", false);
         } // if
@@ -148,6 +156,7 @@ public class DiscountDiscovery extends HttpServlet {
         String username = "";
         double latitude = 0.0;
         double longitude = 0.0;
+        int searchRadius = 0;
         int maxNumOfResults = 0;
         Store[] resultStores = null;
         
@@ -158,15 +167,20 @@ public class DiscountDiscovery extends HttpServlet {
         if (request.getParameter("lngNearby") != null)
           longitude = Double.parseDouble(request.getParameter("lngNearby"));
         
+        if (request.getParameter("radiusNearby") != null)
+          searchRadius = Integer.parseInt(request.getParameter("radiusNearby"));
+        
         if (request.getParameter("maxNumOfResultsNearby") != null)
           maxNumOfResults = Integer.parseInt(request.getParameter("maxNumOfResultsNearby"));
         
-        resultStores = MongoDBSearch.getNearbyPopularStoresSorted(username, latitude, longitude, maxNumOfResults);
+        resultStores = MongoDBSearch.getNearbyPopularStoresSorted(username, latitude, longitude, 
+            searchRadius, maxNumOfResults);
         
         double[] locations = new double[resultStores.length * 2];
         String[] names = new String[resultStores.length];
         String[] addresses = new String[resultStores.length];
         String[] categories = new String[resultStores.length];
+        String[] urls = new String[resultStores.length];
         for (int index = 0; index < resultStores.length; index++)
         {
           locations[index * 2] = resultStores[index].getLatitude();
@@ -174,6 +188,7 @@ public class DiscountDiscovery extends HttpServlet {
           names[index] = resultStores[index].getName();
           addresses[index] = resultStores[index].getAddress();
           categories[index] = resultStores[index].getCategory();
+          urls[index] = resultStores[index].getUrl();
         } // for
         
         Long endTime = System.nanoTime();
@@ -184,14 +199,17 @@ public class DiscountDiscovery extends HttpServlet {
           session.setAttribute("namesUserRecommendation", null);
           session.setAttribute("addressesUserRecommendation", null);
           session.setAttribute("categoriesUserRecommendation", null);
+          session.setAttribute("urlsUserRecommendation", null);
           session.setAttribute("locationsNearby", locations);
           session.setAttribute("namesNearby", names);
           session.setAttribute("addressesNearby", addresses);
           session.setAttribute("categoriesNearby", categories);
+          session.setAttribute("urlsNearby", urls);
           session.setAttribute("locationsCategory", null);
           session.setAttribute("namesCategory", null);
           session.setAttribute("addressesCategory", null);
           session.setAttribute("categoriesCategory", null);
+          session.setAttribute("urlsCategory", null);
           session.setAttribute("startTime", startTime);
           session.setAttribute("loading", false);
         } // if
@@ -222,6 +240,7 @@ public class DiscountDiscovery extends HttpServlet {
         double latitude = 0.0;
         double longitude = 0.0;
         String category = null;
+        int searchRadius = 0;
         int maxNumOfResults = 0;
         Store[] resultStores = null;
         
@@ -235,15 +254,20 @@ public class DiscountDiscovery extends HttpServlet {
         if (request.getParameter("categoryCategory") != null)
           category = request.getParameter("categoryCategory");
         
+        if (request.getParameter("radiusCategory") != null)
+          searchRadius = Integer.parseInt(request.getParameter("radiusCategory"));
+        
         if (request.getParameter("maxNumOfResultsCategory") != null)
           maxNumOfResults = Integer.parseInt(request.getParameter("maxNumOfResultsCategory"));
         
-        resultStores = MongoDBSearch.getStoresByCategorySorted(username, latitude, longitude, category, maxNumOfResults);
+        resultStores = MongoDBSearch.getStoresByCategorySorted(username, latitude, longitude, 
+            category, searchRadius, maxNumOfResults);
         
         double[] locations = new double[resultStores.length * 2];
         String[] names = new String[resultStores.length];
         String[] addresses = new String[resultStores.length];
         String[] categories = new String[resultStores.length];
+        String[] urls = new String[resultStores.length];
         for (int index = 0; index < resultStores.length; index++)
         {
           locations[index * 2] = resultStores[index].getLatitude();
@@ -251,6 +275,7 @@ public class DiscountDiscovery extends HttpServlet {
           names[index] = resultStores[index].getName();
           addresses[index] = resultStores[index].getAddress();
           categories[index] = resultStores[index].getCategory();
+          urls[index] = resultStores[index].getUrl();
         } // for
         
         Long endTime = System.nanoTime();
@@ -261,14 +286,17 @@ public class DiscountDiscovery extends HttpServlet {
           session.setAttribute("namesUserRecommendation", null);
           session.setAttribute("addressesUserRecommendation", null);
           session.setAttribute("categoriesUserRecommendation", null);
+          session.setAttribute("urlsUserRecommendation", null);
           session.setAttribute("locationsNearby", null);
           session.setAttribute("namesNearby", null);
           session.setAttribute("addressesNearby", null);
           session.setAttribute("categoriesNearby", null);
+          session.setAttribute("urlsNearby", null);
           session.setAttribute("locationsCategory", locations);
           session.setAttribute("namesCategory", names);
           session.setAttribute("addressesCategory", addresses);
           session.setAttribute("categoriesCategory", categories);
+          session.setAttribute("urlsCategory", urls);
           session.setAttribute("startTime", startTime);
           session.setAttribute("loading", false);
         } // if

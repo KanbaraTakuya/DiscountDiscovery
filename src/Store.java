@@ -7,6 +7,7 @@ public class Store implements Comparable<Store>
   private final String name;
   private final String address;
   private final String category;
+  private final String url;
   private int numOfSearches;
   
   public Store(double latitude, double longitude, String address, String category)
@@ -15,8 +16,9 @@ public class Store implements Comparable<Store>
     this.longitude = longitude;
     this.numOfSearches = 1;
     this.name = "";
-    this.address = address;
+    this.address = address;  
     this.category = category;
+    this.url = "";
   } // Store
   
   public Store(double latitude, double longitude, int numOfSearches, String address)
@@ -27,9 +29,11 @@ public class Store implements Comparable<Store>
     this.name = "";
     this.address = address;
     this.category = "";
+    this.url = "";
   } // Store
   
-  public Store(double latitude, double longitude, String name, String address, String category)
+  public Store(double latitude, double longitude, String name, String address, 
+      String category, String url)
   {
     this.latitude = latitude;
     this.longitude = longitude;
@@ -37,10 +41,11 @@ public class Store implements Comparable<Store>
     this.name = name;
     this.address = address;
     this.category = category;
+    this.url = url;
   } // Store
   
   public Store(double latitude, double longitude, int numOfSearches, 
-      String name, String address, String category)
+      String name, String address, String category, String url)
   {
     this.latitude = latitude;
     this.longitude = longitude;
@@ -48,6 +53,7 @@ public class Store implements Comparable<Store>
     this.name = name;
     this.address = address;
     this.category = category;
+    this.url = url;
   } // Store
   
   public void incrementNumOfSearches()
@@ -58,32 +64,37 @@ public class Store implements Comparable<Store>
   public double getLatitude()
   {
     return latitude;
-  }
+  } // getLatitude
   
   public double getLongitude()
   {
     return longitude;
-  }
+  } // getLongitude
   
   public String getName()
   {
     return name;
-  }
+  } // getName
   
   public String getAddress()
   {
     return address;
-  }
+  } // getAddress
   
   public String getCategory()
   {
     return category;
-  }
+  } // getCategory
+  
+  public String getUrl()
+  {
+    return url;
+  } // getUrl
   
   public int getNumOfSearches()
   {
     return numOfSearches;
-  }
+  } // getNumOfSearches
   
   @Override
   public String toString()

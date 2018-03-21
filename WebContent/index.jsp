@@ -36,6 +36,10 @@
       String[] categoriesUserRecommendation = null;
       if ((String[])session.getAttribute("categoriesUserRecommendation") != null)
         categoriesUserRecommendation = (String[])session.getAttribute("categoriesUserRecommendation");
+      
+      String[] urlsUserRecommendation = null;
+      if ((String[])session.getAttribute("urlsUserRecommendation") != null)
+        urlsUserRecommendation = (String[])session.getAttribute("urlsUserRecommendation");
         
    	  // Nearby search results.
       double[] locationsNearby = null;
@@ -54,6 +58,10 @@
       if ((String[])session.getAttribute("categoriesNearby") != null)
         categoriesNearby = (String[])session.getAttribute("categoriesNearby");
       
+      String[] urlsNearby = null;
+      if ((String[])session.getAttribute("urlsNearby") != null)
+        urlsNearby = (String[])session.getAttribute("urlsNearby");
+      
    	  // Category search results.
       double[] locationsCategory = null;
       if ((double[])session.getAttribute("locationsCategory") != null)
@@ -70,6 +78,10 @@
       String[] categoriesCategory = null;
       if ((String[])session.getAttribute("categoriesCategory") != null)
         categoriesCategory = (String[])session.getAttribute("categoriesCategory");
+      
+      String[] urlsCategory = null;
+      if ((String[])session.getAttribute("urlsCategory") != null)
+        urlsCategory = (String[])session.getAttribute("urlsCategory");
       
       Long endTime = System.nanoTime();
       Long startTime = null;
@@ -210,6 +222,13 @@
     			<input type="hidden" id="latUserRecommendation" name="latUserRecommendation" value="0.0"/>
     			<input type="hidden" id="lngUserRecommendation" name="lngUserRecommendation" value="0.0"/>
     			Max num of results: <input type="text" id="maxNumOfResultsUserRecommendation" name="maxNumOfResultsUserRecommendation" value="5" style="width:10%">
+    			Search radius (m):
+    			<select id="radiusUserRecommendation" name="radiusUserRecommendation">
+    			  <option value="500">500</option>
+    			  <option value="1000">1000</option>
+    			  <option value="2000">2000</option>
+    			  <option value="3000">3000</option>
+    			 </select>
 	  			<br>
 	  			<input type="submit" value="User Recommendation" onclick="userRecommendation();deleteMarkers()" style="width:30%"/>
 	  		  </form>
@@ -220,6 +239,13 @@
     			<input type="hidden" id="latNearby" name="latNearby" value="0.0"/>
     			<input type="hidden" id="lngNearby" name="lngNearby" value="0.0"/>
     			Max num of results: <input type="text" id="maxNumOfResultsNearby" name="maxNumOfResultsNearby" value="5" style="width:10%">
+	  			Search radius (m):
+    			<select id="radiusNearby" name="radiusNearby">
+    			  <option value="500">500</option>
+    			  <option value="1000">1000</option>
+    			  <option value="2000">2000</option>
+    			  <option value="3000">3000</option>
+    			 </select>
 	  			<br>
 	  			<input type="submit" value="Nearby Search" onclick="nearbySearch();deleteMarkers()" style="width:30%"/>
 	  		  </form> 	
@@ -261,6 +287,13 @@
 			      <option value="Turkish">Turkish</option>
 			      <option value="Vegetarian">Vegetarian</option>
 			    </select>
+			    Search radius (m):
+    			<select id="radiusCategory" name="radiusCategory">
+    			  <option value="500">500</option>
+    			  <option value="1000">1000</option>
+    			  <option value="2000">2000</option>
+    			  <option value="3000">3000</option>
+    			 </select>
 			    <br>
 	  			<input type="submit" value="Category Search" onclick="categorySearch();deleteMarkers()" style="width:30%"/>
 	  		  </form>   
@@ -545,6 +578,14 @@
 		<%}%>
 	<%}%>
 	
+	var urlsUserRecommendationArr = new Array();
+	<%if(urlsUserRecommendation != null) {%>
+		urlsUserRecommendationArr = new Array(<%=urlsUserRecommendation.length%>);
+		<%for (int i=0; i < urlsUserRecommendation.length; i++) {%>
+		urlsUserRecommendationArr[<%=i%>] = "<%=urlsUserRecommendation[i]%>";
+		<%}%>
+	<%}%>
+	
 	// Nearby search results.
 	var locationsNearbyArr = new Array();
 	<%if(locationsNearby != null) {%>
@@ -575,6 +616,14 @@
 		categoriesNearbyArr = new Array(<%=categoriesNearby.length%>);
 		<%for (int i=0; i < categoriesNearby.length; i++) {%>
 			categoriesNearbyArr[<%=i%>] = "<%=categoriesNearby[i]%>";
+		<%}%>
+	<%}%>
+	
+	var urlsNearbyArr = new Array();
+	<%if(urlsNearby != null) {%>
+		urlsNearbyArr = new Array(<%=urlsNearby.length%>);
+		<%for (int i=0; i < urlsNearby.length; i++) {%>
+			urlsNearbyArr[<%=i%>] = "<%=urlsNearby[i]%>";
 		<%}%>
 	<%}%>
 	
@@ -611,6 +660,14 @@
 		<%}%>
 	<%}%>
 	
+	var urlsCategoryArr = new Array();
+	<%if(urlsCategory != null) {%>
+		urlsCategoryArr = new Array(<%=urlsCategory.length%>);
+		<%for (int i=0; i < urlsCategory.length; i++) {%>
+			urlsCategoryArr[<%=i%>] = "<%=urlsCategory[i]%>";
+		<%}%>
+	<%}%>
+	
 	
 	function putUserRecommendationsMarkers() {
 		addUserRecommendationMarkers();
@@ -637,11 +694,12 @@
     	markers.push(marker);
     }
 	
-	function addUserRecommendationMarker(location, name, address, category) {
+	function addUserRecommendationMarker(location, name, address, category, url) {
 		var contentString = '<h1 id="userRecommendationHeading" class="firstHeading">' 
 			+ name + '</h1>'
 			+ '<p><b>Address: </b>' + address + '</p>'
-			+ '<p><b>Category: </b>' + category + '</p>';
+			+ '<p><b>Category: </b>' + category + '</p>'
+			+ '<p><b>Website: </b><a href="http://' + url + '">' + url + '</a></p>';
 	  	var infowindow = new google.maps.InfoWindow({
 		    content: contentString
 		  });
@@ -657,11 +715,12 @@
 		recommendationMarkers.push(marker);
 	}
 	
-	function addNearbySearchMarker(location, name, address, category) {
+	function addNearbySearchMarker(location, name, address, category, url) {
 		var contentString = '<h1 id="nearbyHeading" class="firstHeading">' 
 			+ name + '</h1>'
 			+ '<p><b>Address: </b>' + address + '</p>'
-			+ '<p><b>Category: </b>' + category + '</p>';
+			+ '<p><b>Category: </b>' + category + '</p>'
+			+ '<p><b>Website: </b><a href="http://' + url + '">' + url + '</a></p>';
 		var infowindow = new google.maps.InfoWindow({
 		    content: contentString
 		  });
@@ -677,11 +736,12 @@
     	nearbyMarkers.push(marker);
     }
 	
-	function addCategorySearchMarker(location, name, address, category) {
+	function addCategorySearchMarker(location, name, address, category, url) {
 		var contentString = '<h1 id="categoryHeading" class="firstHeading">' 
 			+ name + '</h1>'
 			+ '<p><b>Address: </b>' + address + '</p>'
-			+ '<p><b>Category: </b>' + category + '</p>';
+			+ '<p><b>Category: </b>' + category + '</p>'
+			+ '<p><b>Website: </b><a href="http://' + url + '">' + url + '</a></p>';
 		var infowindow = new google.maps.InfoWindow({
 		    content: contentString
 		  });

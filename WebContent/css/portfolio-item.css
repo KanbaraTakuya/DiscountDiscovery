@@ -54,7 +54,7 @@ form.example::after {
 #loadMore {
    padding-bottom: 30px;
    padding-top: 30px;
-   padding-left: 20px; 
+   padding-left: 20px;
    width: 100%;
 }
 #loadMore a {
@@ -206,4 +206,30 @@ input {
 .logo {
     height: 40px;
     padding: 5px;
+}
+
+.col-md-8 {
+  text-align: center;
+  position: relative;
+  left: 14%;
+  margin: 20px;
+  font: 'Trebuchet MS';
+}
+
+.map-title{
+
+}
+
+.col-6 {
+  position:relative;
+  left:8%
+
+}
+
+.container {
+  font: 'Trebuchet MS';
+}
+
+.team-member {
+
 }
