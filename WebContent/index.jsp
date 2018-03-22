@@ -168,8 +168,8 @@
             	
                 function initMap() {
                   map = new google.maps.Map(document.getElementById('map'), {
-                    center: {lat: 53.319062, lng: -2.845459},
-                    zoom: 6
+                    center: {lat: 53.467459, lng: -2.233958},
+                    zoom: 12
                   });
                   
                   map.addListener('click', function(event) {
@@ -190,8 +190,8 @@
                       };
                      
                       //zoom in map
-                      map.setCenter(pos);
-                      map.setZoom(12);
+                      //map.setCenter(pos);
+                      //map.setZoom(12);
                     }, function() {
                       handleLocationError(true, infoWindow, map.getCenter());
                     }
@@ -710,6 +710,7 @@
 	    });
 		marker.addListener('click', function() {
     	    infowindow.open(map, marker);
+    	    map.panTo(marker.getPosition());
     	  });
 		recommendationInfoWindows.push(infowindow);
 		recommendationMarkers.push(marker);
@@ -731,6 +732,7 @@
     	});
     	marker.addListener('click', function() {
     	    infowindow.open(map, marker);
+    	    map.panTo(marker.getPosition());
     	  });
     	nearbyInfoWindows.push(infowindow);
     	nearbyMarkers.push(marker);
@@ -752,6 +754,7 @@
     	});
     	marker.addListener('click', function() {
     	    infowindow.open(map, marker);
+    	    map.panTo(marker.getPosition());
     	  });
     	categoryInfoWindows.push(infowindow);
     	categoryMarkers.push(marker);
