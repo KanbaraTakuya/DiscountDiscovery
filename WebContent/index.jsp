@@ -24,65 +24,65 @@
       double[] locationsUserRecommendation = null;
       if ((double[])session.getAttribute("locationsUserRecommendation") != null)
         locationsUserRecommendation = (double[])session.getAttribute("locationsUserRecommendation");
-        
+
       String[] namesUserRecommendation = null;
       if ((String[])session.getAttribute("namesUserRecommendation") != null)
         namesUserRecommendation = (String[])session.getAttribute("namesUserRecommendation");
-      
+
       String[] addressesUserRecommendation = null;
       if ((String[])session.getAttribute("addressesUserRecommendation") != null)
         addressesUserRecommendation = (String[])session.getAttribute("addressesUserRecommendation");
-      
+
       String[] categoriesUserRecommendation = null;
       if ((String[])session.getAttribute("categoriesUserRecommendation") != null)
         categoriesUserRecommendation = (String[])session.getAttribute("categoriesUserRecommendation");
-      
+
       String[] urlsUserRecommendation = null;
       if ((String[])session.getAttribute("urlsUserRecommendation") != null)
         urlsUserRecommendation = (String[])session.getAttribute("urlsUserRecommendation");
-        
+
    	  // Nearby search results.
       double[] locationsNearby = null;
       if ((double[])session.getAttribute("locationsNearby") != null)
         locationsNearby = (double[])session.getAttribute("locationsNearby");
-      
+
       String[] namesNearby = null;
       if ((String[])session.getAttribute("namesNearby") != null)
         namesNearby = (String[])session.getAttribute("namesNearby");
-      
+
       String[] addressesNearby = null;
       if ((String[])session.getAttribute("addressesNearby") != null)
         addressesNearby = (String[])session.getAttribute("addressesNearby");
-      
+
       String[] categoriesNearby = null;
       if ((String[])session.getAttribute("categoriesNearby") != null)
         categoriesNearby = (String[])session.getAttribute("categoriesNearby");
-      
+
       String[] urlsNearby = null;
       if ((String[])session.getAttribute("urlsNearby") != null)
         urlsNearby = (String[])session.getAttribute("urlsNearby");
-      
+
    	  // Category search results.
       double[] locationsCategory = null;
       if ((double[])session.getAttribute("locationsCategory") != null)
         locationsCategory = (double[])session.getAttribute("locationsCategory");
-      
+
       String[] namesCategory = null;
       if ((String[])session.getAttribute("namesCategory") != null)
         namesCategory = (String[])session.getAttribute("namesCategory");
-      
+
       String[] addressesCategory = null;
       if ((String[])session.getAttribute("addressesCategory") != null)
         addressesCategory = (String[])session.getAttribute("addressesCategory");
-      
+
       String[] categoriesCategory = null;
       if ((String[])session.getAttribute("categoriesCategory") != null)
         categoriesCategory = (String[])session.getAttribute("categoriesCategory");
-      
+
       String[] urlsCategory = null;
       if ((String[])session.getAttribute("urlsCategory") != null)
         urlsCategory = (String[])session.getAttribute("urlsCategory");
-      
+
       Long endTime = System.nanoTime();
       Long startTime = null;
       if ((Long)session.getAttribute("startTime") != null)
@@ -165,13 +165,13 @@
             	var nearbyInfoWindows = [];
             	var categoryMarkers = [];
             	var categoryInfoWindows = [];
-            	
+
                 function initMap() {
                   map = new google.maps.Map(document.getElementById('map'), {
                     center: {lat: 53.467459, lng: -2.233958},
                     zoom: 12
                   });
-                  
+
                   map.addListener('click', function(event) {
                 	  deleteClickMarkers();
                       addMarker(event.latLng);
@@ -179,16 +179,14 @@
                       lng = event.latLng.lng();
                       updateLatAndLng();
                   });
-
                   // Try HTML5 geolocation.
                   if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(function(position) {
                       var pos = {
                         lat: position.coords.latitude,
                         lng: position.coords.longitude
-
                       };
-                     
+
                       //zoom in map
                       //map.setCenter(pos);
                       //map.setZoom(12);
@@ -201,7 +199,6 @@
                     handleLocationError(false, infoWindow, map.getCenter());
                   }
                 }
-
                 function handleLocationError(browserHasGeolocation, infoWindow, pos) {
                   infoWindow.setPosition(pos);
                   infoWindow.setContent(browserHasGeolocation ?
@@ -248,7 +245,7 @@
     			 </select>
 	  			<br>
 	  			<input type="submit" value="Nearby Search" onclick="nearbySearch();deleteMarkers()" style="width:30%"/>
-	  		  </form> 	
+	  		  </form>
 	  		  <br>
 			  <form action="DiscountDiscovery" method="post">
                 <input type="hidden" id="usernameCategory" name="usernameCategory" value=""/>
@@ -256,7 +253,7 @@
     			<input type="hidden" id="latCategory" name="latCategory" value="0.0"/>
     			<input type="hidden" id="lngCategory" name="lngCategory" value="0.0"/>
     			Max num of results: <input type="text" id="maxNumOfResultsCategory" name="maxNumOfResultsCategory" value="5" style="width:10%">
-    			Category: 
+    			Category:
     			<select id="categoryCategory" name="categoryCategory">
     			  <option value="Asian Fusion">Asian Fusion</option>
     			  <option value="Australian">Australian</option>
@@ -296,15 +293,15 @@
     			 </select>
 			    <br>
 	  			<input type="submit" value="Category Search" onclick="categorySearch();deleteMarkers()" style="width:30%"/>
-	  		  </form>   
+	  		  </form>
 	  		  <br>
-	  		  <button type="button" onclick="deleteMarkers()" style="width:30%">Remove all markers</button> 		 
+	  		  <button type="button" onclick="deleteMarkers()" style="width:30%">Remove all markers</button>
 	  		  <br><br>
 	  		  <p id="latDisplay">lat</p>
 	  		  <p id="lngDisplay">lng</p>
 	  		  <p id="searchDuration">Search took <%=elapseTime %> seconds to complete
 	      </div>
-	      
+
 
           <h2 class="my-3">Reviews Section</h2>
 
@@ -464,10 +461,9 @@
         <div class="container">
           <label for="inputUsername">Username</label>
           <input type="name" name="username" id="inputUsername" placeholder="Username" required autofocus>
-          
+
           <!--<label for="inputUsername">Email</label>
           <input type="email" name="email" id="inputUsername" placeholder="Username" required>
-
           <label for="inputPassword">Password</label>
           <input type="password" name="confpassword" id="inputPassword" placeholder="Password" required>-->
 
@@ -475,7 +471,7 @@
           <input type="password" name="password" id="inputPassword" placeholder="Password" required>
 
           <div class="clearfix">
-            
+
             <button type="submit" id="btn-signin">Sign in</button>
             <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
             <button type="submit" id="btn-createaccount">Sign Up</button>
@@ -497,7 +493,7 @@
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 	<!-- Load More button -->
-	
+
 	<script>
 	$( document ).ready(function ()
 	{
@@ -534,16 +530,16 @@
       $('.datalink').on('click', function(e){
         //preventing the default link redirection
         e.preventDefault();
-        
+
         $('.myValue').val($(this).data('value'));
         $(this).closest('form').submit();
       });
     });
     </script>
-	
+
 	<!-- JavaScript -->
 	<script src="js/mongodb.js" type="text/javascript"></script>
-	
+
 	<script>
 	// User recommendation search results.
 	var locationsUserRecommendationArr = new Array();
@@ -553,7 +549,7 @@
 			locationsUserRecommendationArr[<%=i%>] = <%=locationsUserRecommendation[i]%>;
 		<%}%>
 	<%}%>
-	
+
 	var namesUserRecommendationArr = new Array();
 	<%if(namesUserRecommendation != null) {%>
 		namesUserRecommendationArr = new Array(<%=namesUserRecommendation.length%>);
@@ -561,7 +557,7 @@
 			namesUserRecommendationArr[<%=i%>] = "<%=namesUserRecommendation[i]%>";
 		<%}%>
 	<%}%>
-	
+
 	var addressesUserRecommendationArr = new Array();
 	<%if(addressesUserRecommendation != null) {%>
 		addressesUserRecommendationArr = new Array(<%=addressesUserRecommendation.length%>);
@@ -569,7 +565,7 @@
 			addressesUserRecommendationArr[<%=i%>] = "<%=addressesUserRecommendation[i]%>";
 		<%}%>
 	<%}%>
-	
+
 	var categoriesUserRecommendationArr = new Array();
 	<%if(categoriesUserRecommendation != null) {%>
 		categoriesUserRecommendationArr = new Array(<%=categoriesUserRecommendation.length%>);
@@ -577,7 +573,7 @@
 			categoriesUserRecommendationArr[<%=i%>] = "<%=categoriesUserRecommendation[i]%>";
 		<%}%>
 	<%}%>
-	
+
 	var urlsUserRecommendationArr = new Array();
 	<%if(urlsUserRecommendation != null) {%>
 		urlsUserRecommendationArr = new Array(<%=urlsUserRecommendation.length%>);
@@ -585,7 +581,7 @@
 		urlsUserRecommendationArr[<%=i%>] = "<%=urlsUserRecommendation[i]%>";
 		<%}%>
 	<%}%>
-	
+
 	// Nearby search results.
 	var locationsNearbyArr = new Array();
 	<%if(locationsNearby != null) {%>
@@ -593,8 +589,8 @@
 		<%for (int i=0; i < locationsNearby.length; i++) {%>
 			locationsNearbyArr[<%=i%>] = <%=locationsNearby[i]%>;
 		<%}%>
-	<%}%>	
-	
+	<%}%>
+
 	var namesNearbyArr = new Array();
 	<%if(namesNearby != null) {%>
 		namesNearbyArr = new Array(<%=namesNearby.length%>);
@@ -602,7 +598,7 @@
 			namesNearbyArr[<%=i%>] = "<%=namesNearby[i]%>";
 		<%}%>
 	<%}%>
-	
+
 	var addressesNearbyArr = new Array();
 	<%if(addressesNearby != null) {%>
 		addressesNearbyArr = new Array(<%=addressesNearby.length%>);
@@ -610,7 +606,7 @@
 			addressesNearbyArr[<%=i%>] = "<%=addressesNearby[i]%>";
 		<%}%>
 	<%}%>
-	
+
 	var categoriesNearbyArr = new Array();
 	<%if(categoriesNearby != null) {%>
 		categoriesNearbyArr = new Array(<%=categoriesNearby.length%>);
@@ -618,7 +614,7 @@
 			categoriesNearbyArr[<%=i%>] = "<%=categoriesNearby[i]%>";
 		<%}%>
 	<%}%>
-	
+
 	var urlsNearbyArr = new Array();
 	<%if(urlsNearby != null) {%>
 		urlsNearbyArr = new Array(<%=urlsNearby.length%>);
@@ -626,7 +622,7 @@
 			urlsNearbyArr[<%=i%>] = "<%=urlsNearby[i]%>";
 		<%}%>
 	<%}%>
-	
+
 	// Category search results.
 	var locationsCategoryArr = new Array();
 	<%if(locationsCategory != null) {%>
@@ -634,8 +630,8 @@
 		<%for (int i=0; i < locationsCategory.length; i++) {%>
 			locationsCategoryArr[<%=i%>] = <%=locationsCategory[i]%>;
 		<%}%>
-	<%}%>	
-	
+	<%}%>
+
 	var namesCategoryArr = new Array();
 	<%if(namesCategory != null) {%>
 		namesCategoryArr = new Array(<%=namesCategory.length%>);
@@ -643,7 +639,7 @@
 			namesCategoryArr[<%=i%>] = "<%=namesCategory[i]%>";
 		<%}%>
 	<%}%>
-	
+
 	var addressesCategoryArr = new Array();
 	<%if(addressesCategory != null) {%>
 		addressesCategoryArr = new Array(<%=addressesCategory.length%>);
@@ -651,7 +647,7 @@
 			addressesCategoryArr[<%=i%>] = "<%=addressesCategory[i]%>";
 		<%}%>
 	<%}%>
-	
+
 	var categoriesCategoryArr = new Array();
 	<%if(categoriesCategory != null) {%>
 		categoriesCategoryArr = new Array(<%=categoriesCategory.length%>);
@@ -659,7 +655,7 @@
 			categoriesCategoryArr[<%=i%>] = "<%=categoriesCategory[i]%>";
 		<%}%>
 	<%}%>
-	
+
 	var urlsCategoryArr = new Array();
 	<%if(urlsCategory != null) {%>
 		urlsCategoryArr = new Array(<%=urlsCategory.length%>);
@@ -667,25 +663,25 @@
 			urlsCategoryArr[<%=i%>] = "<%=urlsCategory[i]%>";
 		<%}%>
 	<%}%>
-	
-	
+
+
 	function putUserRecommendationsMarkers() {
 		addUserRecommendationMarkers();
 	}
-	
+
 	function putNearbySearchMarkers() {
 		addNearbySearchMarkers();
 	}
-	
+
 	function putCategorySearchMarkers() {
 		addCategorySearchMarkers();
 	}
-	
+
 	function updateLatAndLng() {
 		document.getElementById("latDisplay").innerHTML = lat.toString();
 		document.getElementById("lngDisplay").innerHTML = lng.toString();
 	}
-	
+
 	function addMarker(location) {
     	var marker = new google.maps.Marker({
     	position: location,
@@ -693,9 +689,12 @@
     	});
     	markers.push(marker);
     }
-	
+
 	function addUserRecommendationMarker(location, name, address, category, url) {
-		var contentString = '<h1 id="userRecommendationHeading" class="firstHeading">' 
+    var discountsAreAvailable = 0
+    var apiURL = new URL("https://api.yelp.com/v3/businesses/search?term=name&attributes=deals?key=7QBW9KRcTUzgTOXEpvTeNuR7aZvdTwHK4vHJD-Ft3bXakFE1snALoHu-nbRU0sAdRczIyOmdaOJSVr3Nb_TzwaAYWiEHIf-SI_1RGjSOGEKYW8irlD7KND-pxnmdWnYx")
+    var authenticatedURL = apiURL.openConnection()
+    var contentString = '<h1 id="userRecommendationHeading" class="firstHeading">'
 			+ name + '</h1>'
 			+ '<p><b>Address: </b>' + address + '</p>'
 			+ '<p><b>Category: </b>' + category + '</p>'
@@ -703,11 +702,37 @@
 	  	var infowindow = new google.maps.InfoWindow({
 		    content: contentString
 		  });
-		var marker = new google.maps.Marker({
-	    	position: location,
-	    	map: map,
-    		title: name
-	    });
+
+      var discountsAreAvailable = 0;
+      $.get(authenticatedURL, function(data){
+           {
+          // If there is a result
+             if (data.total > 0)
+                 {
+                     discountsAreAvailable = 1;
+                 }
+           }
+      })
+
+
+      if (discountsAreAvailable == 1)
+      {
+		    var marker = new google.maps.Marker({
+	        	position: location,
+	        	map: map,
+        		title: 'Discounts are available for ' + name
+	        });
+      }
+      else
+      {
+		    var marker = new google.maps.Marker({
+	        	position: location,
+	        	map: map,
+        		title: 'Discounts are not available for ' + name
+	        });
+      }
+
+
 		marker.addListener('click', function() {
     	    infowindow.open(map, marker);
     	    map.panTo(marker.getPosition());
@@ -715,9 +740,9 @@
 		recommendationInfoWindows.push(infowindow);
 		recommendationMarkers.push(marker);
 	}
-	
+
 	function addNearbySearchMarker(location, name, address, category, url) {
-		var contentString = '<h1 id="nearbyHeading" class="firstHeading">' 
+		var contentString = '<h1 id="nearbyHeading" class="firstHeading">'
 			+ name + '</h1>'
 			+ '<p><b>Address: </b>' + address + '</p>'
 			+ '<p><b>Category: </b>' + category + '</p>'
@@ -737,9 +762,9 @@
     	nearbyInfoWindows.push(infowindow);
     	nearbyMarkers.push(marker);
     }
-	
+
 	function addCategorySearchMarker(location, name, address, category, url) {
-		var contentString = '<h1 id="categoryHeading" class="firstHeading">' 
+		var contentString = '<h1 id="categoryHeading" class="firstHeading">'
 			+ name + '</h1>'
 			+ '<p><b>Address: </b>' + address + '</p>'
 			+ '<p><b>Category: </b>' + category + '</p>'
@@ -759,14 +784,14 @@
     	categoryInfoWindows.push(infowindow);
     	categoryMarkers.push(marker);
     }
-	
+
 	// Sets the map on all click markers.
 	function setMapOnClick(map) {
 		for (var i = 0; i < markers.length; i++) {
       		markers[i].setMap(map);
     	}
 	}
-	
+
 	// Sets the map on all markers in the array.
     function setMapOnAll(map) {
     	for (var i = 0; i < markers.length; i++) {
@@ -782,22 +807,22 @@
     		categoryMarkers[i].setMap(map);
     	}
     }
-	
+
  	// Removes all click markers from the map, but keeps them in the array.
     function clearClickMarkers() {
     	setMapOnClick(null);
 	}
-	
+
 	// Removes the markers from the map, but keeps them in the array.
     function clearMarkers() {
     	setMapOnAll(null);
 	}
-	
+
 	// Deletes all click markers.
 	function deleteClickMarkers() {
 		clearClickMarkers();
 	}
-	
+
  	// Deletes all markers in the array by removing references to them.
     function deleteMarkers() {
     	clearMarkers();
@@ -807,7 +832,7 @@
 		categoryMarkers = [];
     }
 	</script>
-	
+
   </body>
-  
+
 </html>
